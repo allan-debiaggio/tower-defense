@@ -1,0 +1,167 @@
+<svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Projectiles Section -->
+  <text x="20" y="30" font-family="Arial" font-size="16" fill="#000" font-weight="bold">Projectiles</text>
+  
+  <!-- Fireball Animation Frames -->
+  <g id="fireball-frame1">
+    <circle cx="50" cy="80" r="8" fill="#FF4500"/>
+    <circle cx="50" cy="80" r="5" fill="#FF6347"/>
+    <circle cx="50" cy="80" r="3" fill="#FFD700"/>
+    
+    <!-- Flame trail -->
+    <ellipse cx="42" cy="82" rx="3" ry="2" fill="#FF4500" opacity="0.7"/>
+    <ellipse cx="35" cy="85" rx="2" ry="1" fill="#FF6347" opacity="0.5"/>
+    
+    <!-- Sparkles -->
+    <circle cx="55" cy="75" r="1" fill="#FFD700"/>
+    <circle cx="48" cy="88" r="0.8" fill="#FFF"/>
+  </g>
+  
+  <g id="fireball-frame2" transform="translate(70,0)">
+    <circle cx="50" cy="80" r="9" fill="#FF4500"/>
+    <circle cx="50" cy="80" r="6" fill="#FF6347"/>
+    <circle cx="50" cy="80" r="4" fill="#FFD700"/>
+    
+    <!-- Flame trail -->
+    <ellipse cx="40" cy="83" rx="4" ry="3" fill="#FF4500" opacity="0.7"/>
+    <ellipse cx="32" cy="86" rx="3" ry="2" fill="#FF6347" opacity="0.5"/>
+    
+    <!-- Sparkles -->
+    <circle cx="56" cy="73" r="1.2" fill="#FFD700"/>
+    <circle cx="46" cy="89" r="1" fill="#FFF"/>
+    <circle cx="53" cy="85" r="0.5" fill="#FFF"/>
+  </g>
+  
+  <!-- Koopa Shell Projectile -->
+  <g id="shell-projectile" transform="translate(160,50)">
+    <ellipse cx="0" cy="0" rx="12" ry="10" fill="#00AA00"/>
+    <ellipse cx="0" cy="-2" rx="9" ry="7" fill="#00CC00"/>
+    
+    <!-- Shell pattern -->
+    <rect x="-8" y="-5" width="16" height="2" fill="#008800"/>
+    <rect x="-8" y="0" width="16" height="2" fill="#008800"/>
+    <rect x="-8" y="5" width="16" height="2" fill="#008800"/>
+    
+    <!-- Motion lines -->
+    <line x1="-20" y1="-3" x2="-15" y2="-1" stroke="#008800" stroke-width="2" opacity="0.6"/>
+    <line x1="-25" y1="0" x2="-18" y2="2" stroke="#008800" stroke-width="2" opacity="0.4"/>
+    <line x1="-22" y1="3" x2="-16" y2="4" stroke="#008800" stroke-width="2" opacity="0.3"/>
+  </g>
+  
+  <!-- P-Switch Effect -->
+  <g id="p-switch-effect" transform="translate(250,60)">
+    <!-- Slow effect waves -->
+    <circle cx="0" cy="0" r="15" fill="#4169E1" fill-opacity="0.2" stroke="#4169E1" stroke-width="2"/>
+    <circle cx="0" cy="0" r="25" fill="#4169E1" fill-opacity="0.1" stroke="#4169E1" stroke-width="1"/>
+    <circle cx="0" cy="0" r="35" fill="#4169E1" fill-opacity="0.05" stroke="#4169E1" stroke-width="1"/>
+    
+    <!-- Center indicator -->
+    <circle cx="0" cy="0" r="3" fill="#87CEEB"/>
+    <text x="0" y="2" font-family="Arial" font-size="8" fill="#000" text-anchor="middle">SLOW</text>
+  </g>
+  
+  <!-- UI Elements Section -->
+  <text x="20" y="150" font-family="Arial" font-size="16" fill="#000" font-weight="bold">UI Elements</text>
+  
+  <!-- Health Bar -->
+  <g id="health-bar" transform="translate(50,170)">
+    <rect x="0" y="0" width="150" height="20" fill="#654321" stroke="#000" stroke-width="1"/>
+    <rect x="2" y="2" width="146" height="16" fill="#8B0000"/>
+    <rect x="2" y="2" width="117" height="16" fill="#FF0000"/> <!-- 80% health -->
+    
+    <text x="5" y="14" font-family="Arial" font-size="12" fill="#FFF">❤️ Health: 20/25</text>
+  </g>
+  
+  <!-- Coin Counter -->
+  <g id="coin-counter" transform="translate(250,170)">
+    <rect x="0" y="0" width="100" height="20" fill="#FFD700" stroke="#000" stroke-width="1"/>
+    <circle cx="15" cy="10" r="8" fill="#FFC700" stroke="#B8860B" stroke-width="1"/>
+    <text x="15" y="13" font-family="Arial" font-size="10" fill="#8B4513" text-anchor="middle">$</text>
+    <text x="30" y="14" font-family="Arial" font-size="12" fill="#000">: 150</text>
+  </g>
+  
+  <!-- Wave Counter -->
+  <g id="wave-counter" transform="translate(400,170)">
+    <rect x="0" y="0" width="120" height="20" fill="#4169E1" stroke="#000" stroke-width="1"/>
+    <text x="5" y="14" font-family="Arial" font-size="12" fill="#FFF">Wave: 3/10</text>
+    
+    <!-- Progress bar -->
+    <rect x="80" y="5" width="35" height="10" fill="#000"/>
+    <rect x="81" y="6" width="33" height="8" fill="#191970"/>
+    <rect x="81" y="6" width="10" height="8" fill="#00BFFF"/> <!-- 30% progress -->
+  </g>
+  
+  <!-- Tower Selection Panel -->
+  <g id="tower-selection" transform="translate(50,220)">
+    <rect x="0" y="0" width="300" height="80" fill="#8B4513" stroke="#654321" stroke-width="2"/>
+    <rect x="5" y="5" width="290" height="70" fill="#D2B48C"/>
+    
+    <!-- Tower slots -->
+    <rect x="15" y="15" width="50" height="50" fill="#FFF" stroke="#000" stroke-width="1"/>
+    <rect x="80" y="15" width="50" height="50" fill="#FFF" stroke="#000" stroke-width="1"/>
+    <rect x="145" y="15" width="50" height="50" fill="#FFF" stroke="#000" stroke-width="1"/>
+    
+    <!-- Mini tower icons -->
+    <g transform="translate(40,40) scale(0.3)">
+      <circle cx="0" cy="0" r="8" fill="#FFD700"/>
+      <circle cx="-3" cy="-3" r="2" fill="#FF4500"/>
+      <circle cx="3" cy="-3" r="2" fill="#FF4500"/>
+      <circle cx="0" cy="-6" r="2" fill="#FF4500"/>
+      <circle cx="0" cy="3" r="2" fill="#FF4500"/>
+    </g>
+    
+    <g transform="translate(105,40) scale(0.3)">
+      <ellipse cx="0" cy="0" rx="12" ry="8" fill="#00AA00"/>
+      <rect x="-10" y="-3" width="20" height="2" fill="#008800"/>
+    </g>
+    
+    <g transform="translate(170,40) scale(0.3)">
+      <rect x="-8" y="-6" width="16" height="12" fill="#4169E1"/>
+      <rect x="-6" y="-8" width="12" height="8" fill="#87CEEB"/>
+      <text x="0" y="0" font-family="Arial" font-size="8" fill="#FFF" text-anchor="middle">P</text>
+    </g>
+    
+    <!-- Prices -->
+    <text x="40" y="78" font-family="Arial" font-size="8" fill="#000" text-anchor="middle">50💰</text>
+    <text x="105" y="78" font-family="Arial" font-size="8" fill="#000" text-anchor="middle">75💰</text>
+    <text x="170" y="78" font-family="Arial" font-size="8" fill="#000" text-anchor="middle">100💰</text>
+    
+    <!-- Info panel -->
+    <rect x="210" y="15" width="80" height="50" fill="#F0F8FF" stroke="#000" stroke-width="1"/>
+    <text x="215" y="25" font-family="Arial" font-size="8" fill="#000">Fire Tower</text>
+    <text x="215" y="35" font-family="Arial" font-size="7" fill="#666">Damage: 10</text>
+    <text x="215" y="43" font-family="Arial" font-size="7" fill="#666">Range: 80</text>
+    <text x="215" y="51" font-family="Arial" font-size="7" fill="#666">Speed: Fast</text>
+    <text x="215" y="59" font-family="Arial" font-size="7" fill="#666">Effect: Burn</text>
+  </g>
+  
+  <!-- Game Speed Controls -->
+  <g id="speed-controls" transform="translate(400,250)">
+    <rect x="0" y="0" width="120" height="30" fill="#2F4F4F" stroke="#000" stroke-width="1"/>
+    
+    <rect x="5" y="5" width="25" height="20" fill="#32CD32" stroke="#000" stroke-width="1"/>
+    <text x="17.5" y="17" font-family="Arial" font-size="10" fill="#000" text-anchor="middle">1x</text>
+    
+    <rect x="35" y="5" width="25" height="20" fill="#FFD700" stroke="#000" stroke-width="1"/>
+    <text x="47.5" y="17" font-family="Arial" font-size="10" fill="#000" text-anchor="middle">2x</text>
+    
+    <rect x="65" y="5" width="25" height="20" fill="#FF4500" stroke="#000" stroke-width="1"/>
+    <text x="77.5" y="17" font-family="Arial" font-size="10" fill="#000" text-anchor="middle">4x</text>
+    
+    <rect x="95" y="5" width="20" height="20" fill="#8B0000" stroke="#000" stroke-width="1"/>
+    <text x="105" y="17" font-family="Arial" font-size="8" fill="#FFF" text-anchor="middle">⏸</text>
+  </g>
+  
+  <!-- Range Indicator (for tower placement) -->
+  <g id="range-indicator" transform="translate(450,320)">
+    <circle cx="0" cy="0" r="40" fill="#32CD32" fill-opacity="0.2" stroke="#32CD32" stroke-width="2" stroke-dasharray="5,5"/>
+    <circle cx="0" cy="0" r="3" fill="#228B22"/>
+    <text x="0" y="-45" font-family="Arial" font-size="10" fill="#000" text-anchor="middle">Range: 80</text>
+  </g>
+  
+  <!-- Labels -->
+  <text x="50" y="110" font-family="Arial" font-size="10" fill="#000">Fireball 1</text>
+  <text x="120" y="110" font-family="Arial" font-size="10" fill="#000">Fireball 2</text>
+  <text x="210" y="110" font-family="Arial" font-size="10" fill="#000">Shell</text>
+  <text x="285" y="110" font-family="Arial" font-size="10" fill="#000">P-Switch Effect</text>
+</svg>

@@ -1,0 +1,5 @@
+<svg width="80" height="32"
+  xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="80" height="32" rx="8" fill="#FFFDE7" stroke="#333" stroke-width="2"/>
+  <text x="40" y="22" font-family="Arial Black, Arial, sans-serif" font-size="18" fill="#333" text-anchor="middle">Wave 1/10</text>
+</svg> 

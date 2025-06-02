@@ -1,0 +1,19 @@
+<svg width="64" height="96"
+  xmlns="http://www.w3.org/2000/svg">
+  <!-- Pipe -->
+  <rect x="16" y="72" width="32" height="16" rx="6" fill="#388E3C" stroke="#1B5E20" stroke-width="3"/>
+  <rect x="12" y="88" width="40" height="8" rx="4" fill="#43A047" stroke="#1B5E20" stroke-width="2"/>
+  <!-- Stem -->
+  <rect x="28" y="56" width="8" height="24" rx="3" fill="#43A047"/>
+  <!-- Leaves -->
+  <ellipse cx="20" cy="72" rx="10" ry="5" fill="#66BB6A"/>
+  <ellipse cx="44" cy="72" rx="10" ry="5" fill="#66BB6A"/>
+  <!-- Fire Flower Base -->
+  <ellipse cx="32" cy="40" rx="20" ry="16" fill="#FF9800" stroke="#FF3D00" stroke-width="4"/>
+  <!-- Inner White -->
+  <ellipse cx="32" cy="40" rx="14" ry="10" fill="#FFF"/>
+  <!-- Face -->
+  <ellipse cx="27" cy="40" rx="2" ry="4" fill="#000"/>
+  <ellipse cx="37" cy="40" rx="2" ry="4" fill="#000"/>
+  <ellipse cx="32" cy="48" rx="4" ry="2" fill="#E57373"/>
+</svg> 

@@ -1,0 +1,200 @@
+<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <defs>
+    <!-- Grass texture pattern -->
+    <pattern id="grassPattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+      <rect width="20" height="20" fill="#90EE90"/>
+      <circle cx="5" cy="5" r="1" fill="#228B22"/>
+      <circle cx="15" cy="10" r="1" fill="#228B22"/>
+      <circle cx="8" cy="15" r="1" fill="#228B22"/>
+    </pattern>
+    
+    <!-- Dirt path texture -->
+    <pattern id="dirtPattern" x="0" y="0" width="15" height="15" patternUnits="userSpaceOnUse">
+      <rect width="15" height="15" fill="#D2B48C"/>
+      <circle cx="3" cy="3" r="0.5" fill="#CD853F"/>
+      <circle cx="8" cy="7" r="0.5" fill="#CD853F"/>
+      <circle cx="12" cy="12" r="0.5" fill="#CD853F"/>
+      <circle cx="6" cy="11" r="0.5" fill="#CD853F"/>
+    </pattern>
+    
+    <!-- Grid pattern for tower placement -->
+    <pattern id="gridPattern" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse">
+      <rect width="50" height="50" fill="none"/>
+      <rect width="50" height="50" fill="none" stroke="#90EE90" stroke-width="0.5" opacity="0.3"/>
+    </pattern>
+  </defs>
+  
+  <!-- Background with grass -->
+  <rect width="800" height="600" fill="url(#grassPattern)"/>
+  
+  <!-- Grid overlay -->
+  <rect width="800" height="600" fill="url(#gridPattern)"/>
+  
+  <!-- Background hills -->
+  <ellipse cx="150" cy="550" rx="100" ry="80" fill="#32CD32"/>
+  <ellipse cx="350" cy="570" rx="120" ry="70" fill="#228B22"/>
+  <ellipse cx="580" cy="560" rx="80" ry="60" fill="#32CD32"/>
+  
+  <!-- Clouds -->
+  <g id="cloud1">
+    <circle cx="120" cy="80" r="15" fill="#FFF"/>
+    <circle cx="135" cy="80" r="20" fill="#FFF"/>
+    <circle cx="150" cy="80" r="15" fill="#FFF"/>
+    <circle cx="165" cy="80" r="12" fill="#FFF"/>
+  </g>
+  
+  <g id="cloud2">
+    <circle cx="520" cy="60" r="12" fill="#FFF"/>
+    <circle cx="535" cy="60" r="18" fill="#FFF"/>
+    <circle cx="550" cy="60" r="15" fill="#FFF"/>
+  </g>
+  
+  <g id="cloud3">
+    <circle cx="680" cy="90" r="10" fill="#FFF"/>
+    <circle cx="690" cy="90" r="15" fill="#FFF"/>
+    <circle cx="705" cy="90" r="12" fill="#FFF"/>
+  </g>
+  
+  <!-- Linear dirt path (enemy route) -->
+  <path d="M -20 300 Q 100 280 200 300 Q 300 320 400 300 Q 500 280 600 300 Q 680 315 720 300" 
+        stroke="url(#dirtPattern)" stroke-width="60" fill="none"/>
+  
+  <!-- Path border -->
+  <path d="M -20 300 Q 100 280 200 300 Q 300 320 400 300 Q 500 280 600 300 Q 680 315 720 300" 
+        stroke="#8B4513" stroke-width="64" fill="none" opacity="0.5"/>
+  
+  <!-- Path waypoints (invisible in game, shown here for reference) -->
+  <circle cx="0" cy="300" r="3" fill="#FF0000" opacity="0.7"/>
+  <circle cx="100" cy="285" r="3" fill="#FF0000" opacity="0.7"/>
+  <circle cx="200" cy="300" r="3" fill="#FF0000" opacity="0.7"/>
+  <circle cx="300" cy="315" r="3" fill="#FF0000" opacity="0.7"/>
+  <circle cx="400" cy="300" r="3" fill="#FF0000" opacity="0.7"/>
+  <circle cx="500" cy="285" r="3" fill="#FF0000" opacity="0.7"/>
+  <circle cx="600" cy="300" r="3" fill="#FF0000" opacity="0.7"/>
+  <circle cx="680" cy="315" r="3" fill="#FF0000" opacity="0.7"/>
+  <circle cx="720" cy="300" r="3" fill="#FF0000" opacity="0.7"/>
+  
+  <!-- Enemy spawn point -->
+  <rect x="-40" y="280" width="40" height="40" fill="#654321" rx="5"/>
+  <text x="-20" y="305" font-family="Arial" font-size="12" fill="#FFF" text-anchor="middle">SPAWN</text>
+  
+  <!-- Princess Peach's castle (endpoint) -->
+  <g id="castle" transform="translate(700, 200)">
+    <!-- Castle base -->
+    <rect x="0" y="40" width="80" height="50" fill="#FFB6C1"/>
+    <rect x="0" y="35" width="80" height="10" fill="#FF69B4"/>
+    
+    <!-- Castle towers -->
+    <rect x="-10" y="10" width="20" height="45" fill="#FF69B4"/>
+    <rect x="20" y="20" width="20" height="35" fill="#FF69B4"/>
+    <rect x="50" y="20" width="20" height="35" fill="#FF69B4"/>
+    <rect x="80" y="10" width="20" height="45" fill="#FF69B4"/>
+    
+    <!-- Tower tops -->
+    <polygon points="-10,10 0,-5 10,10" fill="#FF1493"/>
+    <polygon points="20,20 30,5 40,20" fill="#FF1493"/>
+    <polygon points="50,20 60,5 70,20" fill="#FF1493"/>
+    <polygon points="80,10 90,-5 100,10" fill="#FF1493"/>
+    
+    <!-- Castle door -->
+    <rect x="35" y="60" width="15" height="30" fill="#8B4513" rx="7"/>
+    <circle cx="42.5" cy="75" r="2" fill="#FFD700"/>
+    
+    <!-- Windows -->
+    <rect x="5" y="25" width="8" height="10" fill="#000"/>
+    <rect x="25" y="30" width="6" height="8" fill="#000"/>
+    <rect x="55" y="30" width="6" height="8" fill="#000"/>
+    <rect x="85" y="25" width="8" height="10" fill="#000"/>
+    
+    <!-- Main castle window -->
+    <rect x="37" y="45" width="10" height="12" fill="#000"/>
+    <line x1="42" y1="45" x2="42" y2="57" stroke="#FF69B4" stroke-width="1"/>
+    <line x1="37" y1="51" x2="47" y2="51" stroke="#FF69B4" stroke-width="1"/>
+    
+    <!-- Flag -->
+    <line x1="45" y1="-5" x2="45" y2="-25" stroke="#8B4513" stroke-width="3"/>
+    <polygon points="45,-25 65,-18 45,-10" fill="#FF0000"/>
+    <circle cx="55" cy="-19" r="3" fill="#FFD700"/>
+    
+    <!-- Castle details -->
+    <rect x="0" y="90" width="80" height="5" fill="#D2691E"/>
+    <rect x="10" y="92" width="60" height="3" fill="#CD853F"/>
+    
+    <!-- Entrance steps -->
+    <rect x="30" y="90" width="25" height="5" fill="#D2691E"/>
+    <rect x="32" y="95" width="21" height="3" fill="#CD853F"/>
+  </g>
+  
+  <!-- Tower placement zones (highlighted areas) -->
+  <!-- Top row -->
+  <rect x="50" y="100" width="50" height="50" fill="#90EE90" stroke="#228B22" stroke-width="2" opacity="0.3"/>
+  <rect x="150" y="150" width="50" height="50" fill="#90EE90" stroke="#228B22" stroke-width="2" opacity="0.3"/>
+  <rect x="250" y="100" width="50" height="50" fill="#90EE90" stroke="#228B22" stroke-width="2" opacity="0.3"/>
+  <rect x="350" y="150" width="50" height="50" fill="#90EE90" stroke="#228B22" stroke-width="2" opacity="0.3"/>
+  <rect x="450" y="100" width="50" height="50" fill="#90EE90" stroke="#228B22" stroke-width="2" opacity="0.3"/>
+  <rect x="550" y="150" width="50" height="50" fill="#90EE90" stroke="#228B22" stroke-width="2" opacity="0.3"/>
+  
+  <!-- Bottom row -->
+  <rect x="50" y="400" width="50" height="50" fill="#90EE90" stroke="#228B22" stroke-width="2" opacity="0.3"/>
+  <rect x="150" y="450" width="50" height="50" fill="#90EE90" stroke="#228B22" stroke-width="2" opacity="0.3"/>
+  <rect x="250" y="400" width="50" height="50" fill="#90EE90" stroke="#228B22" stroke-width="2" opacity="0.3"/>
+  <rect x="350" y="450" width="50" height="50" fill="#90EE90" stroke="#228B22" stroke-width="2" opacity="0.3"/>
+  <rect x="450" y="400" width="50" height="50" fill="#90EE90" stroke="#228B22" stroke-width="2" opacity="0.3"/>
+  <rect x="550" y="450" width="50" height="50" fill="#90EE90" stroke="#228B22" stroke-width="2" opacity="0.3"/>
+  
+  <!-- Decorative elements -->
+  <!-- Mushrooms -->
+  <g id="mushroom1" transform="translate(120, 350)">
+    <ellipse cx="0" cy="0" rx="8" ry="6" fill="#FF0000"/>
+    <rect x="-2" y="0" width="4" height="12" fill="#FFFACD"/>
+    <circle cx="-4" cy="-2" r="2" fill="#FFF"/>
+    <circle cx="4" cy="-3" r="1.5" fill="#FFF"/>
+    <circle cx="0" cy="-4" r="1" fill="#FFF"/>
+  </g>
+  
+  <g id="mushroom2" transform="translate(480, 380)">
+    <ellipse cx="0" cy="0" rx="6" ry="5" fill="#FF0000"/>
+    <rect x="-1.5" y="0" width="3" height="10" fill="#FFFACD"/>
+    <circle cx="-3" cy="-1" r="1.5" fill="#FFF"/>
+    <circle cx="3" cy="-2" r="1" fill="#FFF"/>
+  </g>
+  
+  <!-- Flowers -->
+  <g id="flower1" transform="translate(300, 480)">
+    <rect x="-1" y="0" width="2" height="15" fill="#228B22"/>
+    <circle cx="-5" cy="-3" r="3" fill="#FF69B4"/>
+    <circle cx="5" cy="-3" r="3" fill="#FF69B4"/>
+    <circle cx="0" cy="-8" r="3" fill="#FF69B4"/>
+    <circle cx="0" cy="2" r="3" fill="#FF69B4"/>
+    <circle cx="0" cy="-3" r="2" fill="#FFD700"/>
+  </g>
+  
+  <!-- UI Area indicators -->
+  <rect x="10" y="10" width="200" height="60" fill="#000" fill-opacity="0.1" stroke="#000" stroke-width="1"/>
+  <text x="20" y="30" font-family="Arial" font-size="14" fill="#000">UI: Health, Coins, Wave</text>
+  <text x="20" y="50" font-family="Arial" font-size="12" fill="#666">❤️ 20 | 💰 100 | Wave 1/10</text>
+  
+  <!-- Legend -->
+  <g id="legend" transform="translate(600, 450)">
+    <rect x="0" y="0" width="180" height="130" fill="#FFF" fill-opacity="0.9" stroke="#000" stroke-width="1"/>
+    <text x="10" y="20" font-family="Arial" font-size="12" fill="#000" font-weight="bold">Level 1 Legend:</text>
+    
+    <circle cx="20" cy="35" r="3" fill="#FF0000"/>
+    <text x="30" y="40" font-family="Arial" font-size="10" fill="#000">Path waypoints</text>
+    
+    <rect x="15" y="45" width="10" height="10" fill="#90EE90" stroke="#228B22" opacity="0.3"/>
+    <text x="30" y="55" font-family="Arial" font-size="10" fill="#000">Tower zones</text>
+    
+    <rect x="15" y="65" width="10" height="5" fill="url(#dirtPattern)"/>
+    <text x="30" y="72" font-family="Arial" font-size="10" fill="#000">Enemy path</text>
+    
+    <rect x="15" y="80" width="10" height="10" fill="#654321"/>
+    <text x="30" y="90" font-family="Arial" font-size="10" fill="#000">Spawn point</text>
+    
+    <polygon points="15,100 20,95 25,100" fill="#FF1493"/>
+    <text x="30" y="105" font-family="Arial" font-size="10" fill="#000">Peach's Castle</text>
+    
+    <text x="10" y="125" font-family="Arial" font-size="9" fill="#666">Grid: 50x50 units</text>
+  </g>
+</svg>

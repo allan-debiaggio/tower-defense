@@ -1,0 +1,18 @@
+<svg width="64" height="48"
+  xmlns="http://www.w3.org/2000/svg">
+  <!-- Body -->
+  <ellipse cx="32" cy="28" rx="18" ry="16" fill="#A0522D"/>
+  <!-- Feet -->
+  <ellipse cx="22" cy="44" rx="6" ry="4" fill="#6D4C41"/>
+  <ellipse cx="42" cy="44" rx="6" ry="4" fill="#6D4C41"/>
+  <!-- Face -->
+  <ellipse cx="32" cy="20" rx="12" ry="8" fill="#FFF"/>
+  <ellipse cx="28" cy="20" rx="2" ry="4" fill="#000"/>
+  <ellipse cx="36" cy="20" rx="2" ry="4" fill="#000"/>
+  <rect x="28" y="28" width="8" height="2" rx="1" fill="#000"/>
+  <!-- Eyebrows -->
+  <path d="M24,14 Q32,10 40,14" stroke="#000" stroke-width="2" fill="none"/>
+  <!-- Wings -->
+  <path d="M12,18 Q4,8 20,12" fill="none" stroke="#B3E5FC" stroke-width="4"/>
+  <path d="M52,18 Q60,8 44,12" fill="none" stroke="#B3E5FC" stroke-width="4"/>
+</svg> 

@@ -1,0 +1,15 @@
+<svg width="48" height="64"
+  xmlns="http://www.w3.org/2000/svg">
+  <!-- Body -->
+  <ellipse cx="24" cy="40" rx="14" ry="18" fill="#FFEB3B"/>
+  <!-- Shell -->
+  <ellipse cx="24" cy="32" rx="16" ry="12" fill="#43A047" stroke="#1B5E20" stroke-width="3"/>
+  <!-- Head -->
+  <ellipse cx="24" cy="16" rx="10" ry="8" fill="#FFEB3B"/>
+  <!-- Eyes -->
+  <ellipse cx="20" cy="16" rx="2" ry="4" fill="#000"/>
+  <ellipse cx="28" cy="16" rx="2" ry="4" fill="#000"/>
+  <!-- Feet -->
+  <ellipse cx="16" cy="60" rx="4" ry="2" fill="#A0522D"/>
+  <ellipse cx="32" cy="60" rx="4" ry="2" fill="#A0522D"/>
+</svg> 
