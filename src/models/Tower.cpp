@@ -5,12 +5,13 @@
 Tower::Tower(std::pair<float, float> position, float range, float fireRate)
     : position_(position), range_(range), fireRate_(fireRate), timeSinceLastShot_(0.0f) {}
 
-void Tower::update(float dt, std::vector<Enemy *> &enemies)
+std::vector<Projectile *> Tower::update(float dt, std::vector<Enemy *> &enemies)
 {
   timeSinceLastShot_ += dt;
   float cooldown = 1.0f / fireRate_;
   if (timeSinceLastShot_ < cooldown)
-    return;
+    return {};
+  std::vector<Projectile *> projectiles;
   for (auto *enemy : enemies)
   {
     if (!enemy->isAlive())
@@ -22,18 +23,20 @@ void Tower::update(float dt, std::vector<Enemy *> &enemies)
     float dist = std::sqrt(dx * dx + dy * dy);
     if (dist <= range_)
     {
-      attack(enemy);
+      projectiles.push_back(attack(enemy));
       timeSinceLastShot_ = 0.0f;
       break; // Attack only one enemy per update
     }
   }
+  return projectiles;
 }
 
 std::pair<float, float> Tower::getPosition() const { return position_; }
 float Tower::getRange() const { return range_; }
-void Tower::attack(Enemy *enemy)
+Projectile *Tower::attack(Enemy *enemy)
 {
   // Base class does nothing
+  return nullptr;
 }
 
 FireFlowerTower::FireFlowerTower(std::pair<float, float> position)
@@ -41,8 +44,17 @@ FireFlowerTower::FireFlowerTower(std::pair<float, float> position)
 {
 }
 
-void FireFlowerTower::attack(Enemy *enemy)
+Projectile *FireFlowerTower::attack(Enemy *enemy)
 {
-  std::cout << "FireFlowerTower attacks enemy at (" << enemy->getPosition().first << ", " << enemy->getPosition().second << ")!\n";
-  enemy->takeDamage(3.0f); // Deal 3 damage
+  static int projectile_id_counter = 0;
+  // Calculate velocity towards enemy
+  auto [ex, ey] = enemy->getPosition();
+  auto [tx, ty] = position_;
+  float dx = ex - tx;
+  float dy = ey - ty;
+  float dist = std::sqrt(dx * dx + dy * dy);
+  float speed = 3.0f; // Fireball speed
+  std::pair<float, float> velocity = {dx / dist * speed, dy / dist * speed};
+  std::cout << "FireFlowerTower fires fireball at enemy at (" << ex << ", " << ey << ")!\n";
+  return new FireballProjectile(position_, velocity, enemy, projectile_id_counter++);
 }

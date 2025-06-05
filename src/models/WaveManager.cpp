@@ -13,7 +13,9 @@ void WaveManager::startNextWave()
 {
   if (!hasNextWave())
     return;
-  spawnWave();
+  activeEnemies_.clear();
+  spawnedThisWave_ = 0;
+  spawnTimer_ = 0.0f;
   waveActive_ = true;
   ++currentWave_;
 }
@@ -33,16 +35,15 @@ int WaveManager::getCurrentWave() const
   return currentWave_;
 }
 
-void WaveManager::spawnWave()
+void WaveManager::update(float dt)
 {
-  activeEnemies_.clear();
-  std::random_device rd;
-  std::mt19937 gen(rd());
-  // For now, only GoombaEnemy; extend here for more types
-  for (int i = 0; i < enemiesPerWave_; ++i)
+  if (!waveActive_)
+    return;
+  spawnTimer_ += dt;
+  while (spawnedThisWave_ < enemiesPerWave_ && spawnTimer_ >= spawnInterval_)
   {
-    // Placeholder for random enemy type selection
-    // int type = std::uniform_int_distribution<>(0, 0)(gen); // Only one type for now
     activeEnemies_.push_back(std::make_unique<GoombaEnemy>(path_));
+    ++spawnedThisWave_;
+    spawnTimer_ -= spawnInterval_;
   }
 }

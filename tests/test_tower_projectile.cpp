@@ -32,11 +32,15 @@ int main()
         std::cout << "Tick " << i << ": Enemy is out of tower's fire range!\n";
       }
     }
-    projectiles.insert(projectiles.end(), newProjectiles.begin(), newProjectiles.end());
+    for (auto *p : newProjectiles)
+    {
+      if (p)
+        projectiles.push_back(p);
+    }
     // Update all projectiles
     for (auto *proj : projectiles)
     {
-      if (!proj->hasHit())
+      if (proj && !proj->hasHit())
         proj->update(dt);
     }
     auto [x, y] = goomba.getPosition();
@@ -49,6 +53,16 @@ int main()
   }
   // Clean up projectiles
   for (auto *proj : projectiles)
-    delete proj;
+    if (proj)
+      delete proj;
+  // After the main loop, check for projectiles that hit
+  for (size_t i = 0; i < projectiles.size(); ++i)
+  {
+    if (projectiles[i] && projectiles[i]->hasHit())
+    {
+      auto [px, py] = projectiles[i]->getPosition();
+      std::cout << "Projectile " << projectiles[i]->getId() << " hit the enemy, final position: (" << px << ", " << py << ")\n";
+    }
+  }
   return 0;
 }

@@ -1,0 +1,35 @@
+# Compiled object files
+*.o
+*.obj
+
+# Compiled binary executables
+*.exe
+*.out
+*.app
+*.bin
+
+# Test executables
+/tests/test_*
+
+# Build directories
+/build/
+/bin/
+/dist/
+
+# MacOS system files
+.DS_Store
+
+# Editor/IDE files
+*.swp
+*~
+.vscode/
+.idea/
+
+# CMake and Make build files
+CMakeFiles/
+CMakeCache.txt
+Makefile
+cmake_install.cmake
+
+# Other
+*.log 

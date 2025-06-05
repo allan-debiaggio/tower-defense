@@ -13,6 +13,7 @@ public:
   bool isWaveActive() const;
   std::vector<std::unique_ptr<Enemy>> &getActiveEnemies();
   int getCurrentWave() const;
+  void update(float dt); // Call this every tick to spawn enemies over time
 
 private:
   int numWaves_;
@@ -21,5 +22,8 @@ private:
   bool waveActive_;
   std::vector<std::unique_ptr<Enemy>> activeEnemies_;
   const Path &path_;
+  float spawnInterval_ = 1.0f; // seconds between spawns
+  float spawnTimer_ = 0.0f;    // time since last spawn
+  int spawnedThisWave_ = 0;    // how many enemies spawned in current wave
   void spawnWave();
 };

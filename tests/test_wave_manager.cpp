@@ -13,9 +13,10 @@ int main()
   {
     std::cout << "Starting wave " << waveNum << "\n";
     waveManager.startNextWave();
-    auto &enemies = waveManager.getActiveEnemies();
-    for (int tick = 0; tick < 6; ++tick)
+    for (int tick = 0; tick < 10; ++tick)
     {
+      waveManager.update(1.0f); // Advance time and spawn enemies as needed
+      auto &enemies = waveManager.getActiveEnemies();
       std::cout << "Tick " << tick << ": ";
       for (size_t i = 0; i < enemies.size(); ++i)
       {

@@ -2,8 +2,8 @@
 #include <cmath>
 #include <iostream>
 
-Projectile::Projectile(std::pair<float, float> position, std::pair<float, float> velocity, float damage, Enemy *target)
-    : position_(position), velocity_(velocity), damage_(damage), target_(target), hit_(false) {}
+Projectile::Projectile(std::pair<float, float> position, std::pair<float, float> velocity, float damage, Enemy *target, int id)
+    : position_(position), velocity_(velocity), damage_(damage), target_(target), hit_(false), id_(id) {}
 
 void Projectile::update(float dt)
 {
@@ -43,14 +43,14 @@ void Projectile::onHit()
   // Base class does nothing
 }
 
-FireballProjectile::FireballProjectile(std::pair<float, float> position, std::pair<float, float> velocity, Enemy *target)
-    : Projectile(position, velocity, 3.0f, target) {}
+FireballProjectile::FireballProjectile(std::pair<float, float> position, std::pair<float, float> velocity, Enemy *target, int id)
+    : Projectile(position, velocity, 3.0f, target, id) {}
 
 void FireballProjectile::onHit()
 {
   if (target_ && target_->isAlive())
   {
-    std::cout << "FireballProjectile hits enemy at (" << target_->getPosition().first << ", " << target_->getPosition().second << ")!\n";
+    std::cout << "FireballProjectile (id=" << id_ << ") hits enemy at (" << target_->getPosition().first << ", " << target_->getPosition().second << ")!\n";
     target_->takeDamage(damage_);
   }
 }
