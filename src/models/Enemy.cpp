@@ -37,5 +37,12 @@ float Enemy::getHealth() const { return health_; }
 std::pair<float, float> Enemy::getPosition() const { return position_; }
 bool Enemy::isAlive() const { return health_ > 0; }
 
+void Enemy::takeDamage(float amount)
+{
+  health_ -= amount;
+  if (health_ < 0)
+    health_ = 0;
+}
+
 GoombaEnemy::GoombaEnemy(const Path &path)
     : Enemy(10.0f, 1.0f, path) {}
