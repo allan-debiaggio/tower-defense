@@ -12,6 +12,7 @@ public:
   float getHealth() const;
   std::pair<float, float> getPosition() const;
   bool isAlive() const;
+  void takeDamage(float amount);
 
 protected:
   float health_;
