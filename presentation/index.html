@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Super Mario Tower Defense Game</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Google Fonts: Press Start 2P for retro pixel font -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="bg-overlay"></div>
+  <div class="container">
+    <!-- Slide 1: Main -->
+    <div class="slide slide-main">
+      <h1 class="main-title">Super Mario Tower Defense</h1>
+      <div class="characters-large-row">
+        <div class="character-col left-col">
+          <img src="assets/mario.png" alt="Mario" class="character-large mario-large">
+          <img src="assets/goomba.png" alt="Goomba" class="character-large goomba-large">
+        </div>
+        <div class="character-col right-col">
+          <img src="assets/peach.png" alt="Peach" class="character-large peach-large">
+          <img src="assets/bowser1.png" alt="Bowser" class="character-large bowser-large">
+        </div>
+      </div>
+    </div>
+    <!-- Slide 2: Feature: Level management -->
+    <div class="slide slide-feature" style="display:none;">
+      <h1 class="main-title">Feature: Level management</h1>
+      <div class="feature-slide-layout">
+        <div class="feature-bowser-img-col">
+          <img src="assets/bowser3.png" alt="Bowser" class="feature-bowser-img">
+        </div>
+        <div class="feature-cards-col">
+          <div class="feature-card code-card large-card">
+            <div class="card-title">Code Snippet</div>
+            <pre class="code-scroll"><code>// src/models/LevelManager.h
+#pragma once
+#include &lt;vector&gt;
+#include &lt;memory&gt;
+#include "Path.h"
+#include "Tower.h"
+#include "WaveManager.h"
+#include &lt;random&gt;
+
+class LevelManager
+{
+public:
+  LevelManager(int width, int height, const std::vector&lt;Path&gt; &paths, int numWaves, int enemiesPerWave);
+  LevelManager(const LevelManager &) = delete;
+  LevelManager &operator=(const LevelManager &) = delete;
+  int getWidth() const;
+  int getHeight() const;
+  bool isBuildable(int x, int y) const;
+  bool placeTower(int x, int y, std::unique_ptr&lt;Tower&gt; tower);
+  bool removeTower(int x, int y);
+  Tower *getTower(int x, int y) const;
+  const std::vector&lt;Path&gt; &getPaths() const;
+  const Path &getPath(size_t index) const;
+  size_t getNumPaths() const;
+  WaveManager &getWaveManager();
+  void reset();
+  void setEnemyFactories(const std::vector&lt;WaveManager::EnemyFactory&gt; &enemyFactories);
+
+private:
+  int width_;
+  int height_;
+  std::vector&lt;std::vector&lt;int&gt;&gt; map_; // 0: empty, 1: path, 2: buildable
+  std::vector&lt;std::vector&lt;std::unique_ptr&lt;Tower&gt;&gt;&gt; towers_;
+  std::vector&lt;Path&gt; paths_;
+  WaveManager waveManager_;
+};
+</code></pre>
+          </div>
+          <div class="feature-card explanation-card large-card">
+            <div class="card-title">Feature Explanation</div>
+            <div class="explanation-scroll">
+              <ul>
+                <li><b>Map Initialization:</b> The LevelManager sets up the level grid, marking path tiles and buildable
+                  areas based on provided paths.</li>
+                <li><b>Tower Placement:</b> Handles logic for placing and removing towers, ensuring only valid
+                  (buildable and empty) tiles are used.</li>
+                <li><b>Path Management:</b> Supports multiple paths per level, each defined by waypoints, allowing for
+                  complex enemy movement.</li>
+                <li><b>Wave Management:</b> Integrates a WaveManager to control enemy waves, types, and progression for
+                  each level.</li>
+                <li><b>Level Reset:</b> Provides a reset function to clear towers and prepare the level for replay or
+                  restart.</li>
+                <li><b>Integration:</b> Used by GameManager to manage multiple levels, track current level, and
+                  coordinate state transitions.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Slide 3: Feature: Game State Management -->
+    <div class="slide slide-state" style="display:none;">
+      <h1 class="main-title">Feature: Game State Management</h1>
+      <div class="feature-slide-layout">
+        <div class="feature-bowser-img-col">
+          <img src="assets/bowser2.png" alt="Bowser" class="feature-bowser-img">
+        </div>
+        <div class="feature-cards-col">
+          <div class="feature-card code-card large-card">
+            <div class="card-title">Code Snippet</div>
+            <pre class="code-scroll"><code>// src/models/GameState.h
+#pragma once
+
+class GameManager; // Forward declaration
+
+class GameState {
+public:
+  virtual ~GameState() = default;
+  virtual void enter(GameManager &manager) {}
+  virtual void update(GameManager &manager, float dt) = 0;
+  virtual void handleInput(GameManager &manager) {}
+  virtual void exit(GameManager &manager) {}
+};
+
+// src/models/GameManager.h/.cpp (state logic)
+class GameManager {
+  // ...
+  void setState(std::unique_ptr<GameState> newState) {
+    if (currentState_)
+      currentState_->exit(*this);
+    currentState_ = std::move(newState);
+    if (currentState_)
+      currentState_->enter(*this);
+  }
+  void update(float dt) {
+    if (currentState_)
+      currentState_->update(*this, dt);
+  }
+  void handleInput() {
+    if (currentState_)
+      currentState_->handleInput(*this);
+  }
+  // ...
+};
+</code></pre>
+          </div>
+          <div class="feature-card explanation-card large-card">
+            <div class="card-title">Feature Explanation</div>
+            <div class="explanation-scroll">
+              <ul>
+                <li><b>State Pattern:</b> The game uses the State design pattern to manage different game phases (main
+                  menu, playing, paused, game over, victory, etc.).</li>
+                <li><b>GameState Base Class:</b> All states inherit from <code>GameState</code>, which defines the
+                  interface for entering, updating, handling input, and exiting a state.</li>
+                <li><b>Dynamic State Transitions:</b> <code>GameManager</code> holds a pointer to the current state and
+                  can switch states at runtime using <code>setState()</code>.</li>
+                <li><b>Encapsulation:</b> Each state encapsulates its own logic for input, updates, and transitions,
+                  keeping the game flow modular and maintainable.</li>
+                <li><b>Examples:</b> States include <code>MainMenuState</code>, <code>PlayingState</code>,
+                  <code>PausedState</code>, <code>GameOverState</code>, and <code>VictoryState</code>.
+                </li>
+                <li><b>Benefits:</b> This approach makes it easy to add new states, change game flow, and keep code
+                  organized.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Slide 4: Design Patterns -->
+    <div class="slide slide-patterns" style="display:none;">
+      <h1 class="main-title">Design patterns</h1>
+      <div class="feature-slide-layout">
+        <div class="feature-bowser-img-col">
+          <img src="assets/mario_bros.png" alt="Mario Bros" class="feature-bowser-img">
+        </div>
+        <div class="feature-cards-col">
+          <div class="feature-card code-card large-card">
+            <div class="card-title">Code Snippet</div>
+            <pre class="code-scroll"><code>// Factory Pattern: Enemy creation (src/models/WaveManager.h)
+using EnemyFactory = std::function<std::unique_ptr<Enemy>(const Path&)>;
+
+// State Pattern: GameState base (src/models/GameState.h)
+class GameState {
+public:
+  virtual ~GameState() = default;
+  virtual void enter(GameManager &manager) {}
+  virtual void update(GameManager &manager, float dt) = 0;
+  virtual void handleInput(GameManager &manager) {}
+  virtual void exit(GameManager &manager) {}
+};
+
+// Observer Pattern: Event system (uml_tower_defense.puml)
+interface IObserver {
+  void onNotify(event: GameEvent);
+}
+class EventDispatcher {
+  void addObserver(IObserver* obs);
+  void removeObserver(IObserver* obs);
+  void notify(event: GameEvent);
+};
+</code></pre>
+          </div>
+          <div class="feature-card explanation-card large-card">
+            <div class="card-title">Feature Explanation</div>
+            <div class="explanation-scroll">
+              <ul>
+                <li><b>State Pattern:</b> Used for game state management (<code>GameState</code> and its subclasses for
+                  menu, play, pause, etc.).</li>
+                <li><b>Factory Pattern:</b> Used for dynamic creation of enemies and towers (e.g.,
+                  <code>EnemyFactory</code>, <code>TowerFactory</code>).
+                </li>
+                <li><b>Observer Pattern:</b> Planned for event notification (e.g., <code>EventDispatcher</code> and
+                  <code>IObserver</code> for UI/game events).
+                </li>
+                <li><b>MVC (Model-View-Controller):</b> The codebase is organized into model, view, and controller
+                  layers for separation of concerns.</li>
+                <li><b>Strategy/Polymorphism:</b> Enemies and towers use inheritance and virtual methods to allow
+                  different behaviors (e.g., <code>Enemy</code> subclasses, <code>Tower</code> subclasses).</li>
+                <li><b>Extensibility:</b> These patterns make it easy to add new enemy/tower types, states, and features
+                  as the project grows.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <img src="assets/mortar.png" alt="Left" class="side-arrow left-arrow" id="leftArrow">
+    <img src="assets/turtle.png" alt="Right" class="side-arrow right-arrow" id="rightArrow">
+    <div class="footer">&copy; 2025 Super Mario Tower Defense | Retro Presentation</div>
+  </div>
+  <script src="script.js"></script>
+</body>
+
+</html>
