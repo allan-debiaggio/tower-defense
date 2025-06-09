@@ -33,3 +33,12 @@ public:
 protected:
   void onHit() override;
 };
+
+class IceProjectile : public Projectile
+{
+public:
+  IceProjectile(std::pair<float, float> position, std::pair<float, float> velocity, Enemy *target, int id);
+
+protected:
+  void onHit() override;
+};

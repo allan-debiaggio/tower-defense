@@ -3,7 +3,7 @@
 #include <iostream>
 
 Tower::Tower(std::pair<float, float> position, float range, float fireRate)
-    : position_(position), range_(range), fireRate_(fireRate), timeSinceLastShot_(0.0f) {}
+    : position_(position), range_(range), fireRate_(fireRate), timeSinceLastShot_(0.0f), level_(1), upgradeCost_(10) {}
 
 std::vector<Projectile *> Tower::update(float dt, std::vector<Enemy *> &enemies)
 {
@@ -57,4 +57,50 @@ Projectile *FireFlowerTower::attack(Enemy *enemy)
   std::pair<float, float> velocity = {dx / dist * speed, dy / dist * speed};
   std::cout << "FireFlowerTower fires fireball at enemy at (" << ex << ", " << ey << ")!\n";
   return new FireballProjectile(position_, velocity, enemy, projectile_id_counter++);
+}
+
+IceTower::IceTower(std::pair<float, float> position)
+    : Tower(position, 3.0f, 0.8f) // range 3.0, 0.8 shots/sec
+{
+}
+
+Projectile *IceTower::attack(Enemy *enemy)
+{
+  static int projectile_id_counter = 0;
+  auto [ex, ey] = enemy->getPosition();
+  auto [tx, ty] = position_;
+  float dx = ex - tx;
+  float dy = ey - ty;
+  float dist = std::sqrt(dx * dx + dy * dy);
+  float speed = 2.5f; // Ice projectile speed
+  std::pair<float, float> velocity = {dx / dist * speed, dy / dist * speed};
+  std::cout << "IceTower fires ice projectile at enemy at (" << ex << ", " << ey << ")!\n";
+  return new IceProjectile(position_, velocity, enemy, projectile_id_counter++);
+}
+
+int Tower::getLevel() const { return level_; }
+int Tower::getUpgradeCost() const { return upgradeCost_; }
+bool Tower::canUpgrade() const { return level_ < 3; }
+bool Tower::upgrade(int &playerCoins)
+{
+  if (!canUpgrade() || playerCoins < upgradeCost_)
+    return false;
+  playerCoins -= upgradeCost_;
+  ++level_;
+  range_ *= 1.2f;
+  fireRate_ *= 1.2f;
+  upgradeCost_ = static_cast<int>(upgradeCost_ * 1.5f);
+  return true;
+}
+int Tower::getSellValue() const
+{
+  // Assume base cost 10, upgrades add upgradeCost_ (approximate)
+  int totalSpent = 10;
+  int cost = 10;
+  for (int i = 0; i < level_; ++i)
+  {
+    cost = static_cast<int>(cost * 1.5f);
+    totalSpent += cost;
+  }
+  return static_cast<int>(totalSpent * 0.75f);
 }

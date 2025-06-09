@@ -54,3 +54,15 @@ void FireballProjectile::onHit()
     target_->takeDamage(damage_);
   }
 }
+
+IceProjectile::IceProjectile(std::pair<float, float> position, std::pair<float, float> velocity, Enemy *target, int id)
+    : Projectile(position, velocity, 2.0f, target, id) {}
+
+void IceProjectile::onHit()
+{
+  if (target_ && target_->isAlive())
+  {
+    std::cout << "IceProjectile (id=" << id_ << ") hits enemy at (" << target_->getPosition().first << ", " << target_->getPosition().second << ")!\n";
+    target_->takeDamage(damage_);
+  }
+}
