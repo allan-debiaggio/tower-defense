@@ -1,0 +1,28 @@
+Level1:
+Core Assets Needed:
+●​
+●​
+●​
+●​
+●​
+●​
+
+Map/Background: Green hills terrain with dirt path
+Towers: Fire Flower, Koopa Shell, P-Switch sprites
+Enemies: Goomba, Koopa Troopa, Paragoomba sprites
+UI Elements: Health bar, wave counter, coin display
+Projectiles: Fireball, shell animations
+Grid overlay for tower placement
+
+Technical Considerations for SFML:
+●​
+●​
+●​
+●​
+
+Sprite sheets for animated characters
+Tile-based map system for the grid
+Path waypoints for enemy movement
+Simple state management for tower/enemy interactions
+
+

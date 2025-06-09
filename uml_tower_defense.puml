@@ -1,0 +1,196 @@
+@startuml
+' === Model Layer ===
+class GameModel {
+  - levels: vector<Level>
+  - player: Player
+  - scoreManager: ScoreManager
+  - resourceManager: ResourceManager
+  - currentLevel: Level*
+  + startGame()
+  + update(dt: float)
+  + handleEvent(event)
+  + getCurrentLevel(): Level*
+}
+
+class Level {
+  - enemies: vector<Enemy*>
+  - towers: vector<Tower*>
+  - path: Path
+  - waveManager: WaveManager
+  - state: LevelState
+  + start()
+  + update(dt: float)
+  + spawnWave()
+  + addTower(t: Tower*)
+  + removeTower(t: Tower*)
+}
+
+abstract class Enemy {
+  - health: int
+  - speed: float
+  - position: Vector2f
+  - path: Path*
+  - reward: int
+  + move(dt: float)
+  + takeDamage(dmg: int)
+  + isAlive(): bool
+  + onDeath()
+}
+class GoombaEnemy
+class KoopaEnemy
+
+abstract class Tower {
+  - position: Vector2f
+  - range: float
+  - fireRate: float
+  - level: int
+  - target: Enemy*
+  + attack()
+  + upgrade()
+  + canAttack(e: Enemy*): bool
+}
+class FireFlowerTower
+class KoopaShellTower
+class PSwitchTower
+
+class Projectile {
+  - position: Vector2f
+  - velocity: Vector2f
+  - damage: int
+  - target: Enemy*
+  + update(dt: float)
+  + onHit()
+}
+
+class Player {
+  - coins: int
+  - lives: int
+  + addCoins(amount: int)
+  + spendCoins(amount: int): bool
+  + loseLife()
+}
+
+class Path {
+  - waypoints: vector<Vector2f>
+  + getNextWaypoint()
+}
+
+class ScoreManager {
+  - score: int
+  - highScores: vector<int>
+  + addScore(points: int)
+  + getHighScores(): vector<int>
+}
+
+class ResourceManager {
+  - resources: map<string, int>
+  + addResource(name: string, amount: int)
+  + spendResource(name: string, amount: int): bool
+}
+
+class WaveManager {
+  - waves: vector<Wave>
+  - currentWave: int
+  + startNextWave()
+  + isWaveActive(): bool
+}
+
+' === Factory & Observer Patterns ===
+class EnemyFactory {
+  + createEnemy(type: string, path: Path*): Enemy*
+}
+class TowerFactory {
+  + createTower(type: string, pos: Vector2f): Tower*
+}
+
+interface IObserver {
+  + onNotify(event: GameEvent)
+}
+class EventDispatcher {
+  - observers: vector<IObserver*>
+  + addObserver(obs: IObserver*)
+  + removeObserver(obs: IObserver*)
+  + notify(event: GameEvent)
+}
+
+' === View Layer ===
+class GameView {
+  + render()
+  + drawUI()
+}
+class LevelView {
+  + render()
+}
+class EnemyView {
+  + render(enemy: Enemy*)
+}
+class TowerView {
+  + render(tower: Tower*)
+}
+class ProjectileView {
+  + render(projectile: Projectile*)
+}
+class MenuView {
+  + render()
+}
+class HUDView {
+  + render()
+}
+
+' === Controller Layer ===
+class GameController {
+  + update(dt: float)
+  + handleInput(event)
+}
+class LevelController {
+  + update(dt: float)
+  + handleTowerPlacement()
+}
+class EnemyController {
+  + update(dt: float)
+}
+class TowerController {
+  + update(dt: float)
+}
+class InputController {
+  + processInput(event)
+}
+
+' === Relationships ===
+GameModel "1" o-- "1..*" Level
+GameModel "1" o-- "1" Player
+GameModel "1" o-- "1" ScoreManager
+GameModel "1" o-- "1" ResourceManager
+GameModel "1" o-- "1" Level : currentLevel
+
+Level "1" o-- "1..*" Enemy
+Level "1" o-- "1..*" Tower
+Level "1" o-- "1" Path
+Level "1" o-- "1" WaveManager
+
+EnemyFactory ..> Enemy : creates >
+TowerFactory ..> Tower : creates >
+
+Enemy <|-- GoombaEnemy
+Enemy <|-- KoopaEnemy
+Tower <|-- FireFlowerTower
+Tower <|-- KoopaShellTower
+Tower <|-- PSwitchTower
+
+EventDispatcher o-- IObserver
+
+GameView o-- GameModel
+LevelView o-- Level
+EnemyView o-- Enemy
+TowerView o-- Tower
+ProjectileView o-- Projectile
+MenuView o-- GameModel
+HUDView o-- GameModel
+
+GameController o-- GameModel
+LevelController o-- Level
+EnemyController o-- Enemy
+TowerController o-- Tower
+InputController o-- GameController
+
+@enduml 

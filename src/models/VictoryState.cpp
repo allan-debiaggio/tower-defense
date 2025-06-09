@@ -2,6 +2,7 @@
 #include "GameManager.h"
 #include "MainMenuState.h"
 #include "LevelSelectState.h"
+#include "TowerPlacementState.h"
 #include <iostream>
 #include <memory>
 
@@ -26,7 +27,16 @@ void VictoryState::handleInput(GameManager &manager)
     std::cin >> choice;
     if (choice == 1)
     {
-      manager.setState(std::make_unique<LevelSelectState>());
+      if (manager.nextLevel())
+      {
+        std::cout << "Starting next level!\n";
+        manager.setState(std::make_unique<TowerPlacementState>());
+      }
+      else
+      {
+        std::cout << "No more levels! Returning to main menu.\n";
+        manager.setState(std::make_unique<MainMenuState>());
+      }
     }
     else if (choice == 2)
     {

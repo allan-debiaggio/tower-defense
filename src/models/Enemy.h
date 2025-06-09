@@ -13,6 +13,7 @@ public:
   std::pair<float, float> getPosition() const;
   bool isAlive() const;
   void takeDamage(float amount);
+  bool hasReachedEnd() const { return currentWaypoint_ + 1 >= path_.getNumWaypoints(); }
 
 protected:
   float health_;
@@ -34,4 +35,16 @@ class KoopaEnemy : public Enemy
 public:
   KoopaEnemy(const Path &path);
   // Can override update if needed
+};
+
+class ParagoombaEnemy : public Enemy
+{
+public:
+  ParagoombaEnemy(const Path &path);
+};
+
+class BowserEnemy : public Enemy
+{
+public:
+  BowserEnemy(const Path &path);
 };

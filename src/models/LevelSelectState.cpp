@@ -28,7 +28,7 @@ void LevelSelectState::handleInput(GameManager &manager)
     }
   }
   std::cout << "Level " << choice << " selected.\n";
-  // TODO: manager.setCurrentLevel(choice - 1);
+  manager.setCurrentLevelIndex(choice - 1);
   manager.setState(std::make_unique<TowerPlacementState>());
 }
 

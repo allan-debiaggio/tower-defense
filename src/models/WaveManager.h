@@ -19,6 +19,7 @@ public:
   void update(float dt); // Call this every tick to spawn enemies over time
   size_t getNumPaths() const;
   void setEnemyFactories(const std::vector<EnemyFactory> &enemyFactories);
+  int getBaseEnemiesPerWave() const { return baseEnemiesPerWave_; }
 
 private:
   int numWaves_;

@@ -10,7 +10,11 @@ Enemy::Enemy(float health, float speed, const Path &path)
 void Enemy::update(float dt)
 {
   if (currentWaypoint_ + 1 >= path_.getNumWaypoints())
+  {
+    // If already at the last waypoint, increment to signal removal
+    ++currentWaypoint_;
     return;
+  }
   auto [x, y] = position_;
   auto [tx, ty] = path_.getWaypoint(currentWaypoint_ + 1);
   float dx = tx - x;
@@ -49,3 +53,9 @@ GoombaEnemy::GoombaEnemy(const Path &path)
 
 KoopaEnemy::KoopaEnemy(const Path &path)
     : Enemy(20.0f, 0.7f, path) {}
+
+ParagoombaEnemy::ParagoombaEnemy(const Path &path)
+    : Enemy(8.0f, 1.2f, path) {}
+
+BowserEnemy::BowserEnemy(const Path &path)
+    : Enemy(30.0f, 0.5f, path) {}

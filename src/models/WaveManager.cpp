@@ -1,5 +1,6 @@
 #include "WaveManager.h"
 #include <random>
+#include <iostream>
 
 WaveManager::WaveManager(int numWaves, int baseEnemiesPerWave, const std::vector<Path> &paths, const std::vector<EnemyFactory> &enemyFactories)
     : numWaves_(numWaves), baseEnemiesPerWave_(baseEnemiesPerWave), currentWave_(0), waveActive_(false), paths_(paths), rng_(std::random_device{}()), pathDist_(0, paths.size() - 1), enemyFactories_(enemyFactories), enemyTypeDist_(0, enemyFactories.empty() ? 0 : enemyFactories.size() - 1) {}
@@ -24,6 +25,7 @@ void WaveManager::startNextWave()
   spawnTimer_ = 0.0f;
   waveActive_ = true;
   ++currentWave_;
+  std::cout << "[DEBUG] startNextWave: currentWave_=" << currentWave_ << " numWaves_=" << numWaves_ << std::endl;
 }
 
 bool WaveManager::isWaveActive() const
@@ -57,6 +59,11 @@ void WaveManager::update(float dt)
       activeEnemies_.push_back(std::make_unique<GoombaEnemy>(paths_[pathIndex]));
     ++spawnedThisWave_;
     spawnTimer_ -= spawnInterval_;
+  }
+  // End wave if all enemies spawned and all are gone
+  if (spawnedThisWave_ >= enemiesPerWave && activeEnemies_.empty())
+  {
+    waveActive_ = false;
   }
 }
 

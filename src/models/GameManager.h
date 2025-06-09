@@ -28,6 +28,7 @@ public:
   const std::string &getPlayerName() const;
   Player &getPlayer();
   void resetPlayer();
+  void setCurrentLevelIndex(int idx);
 
 private:
   std::vector<std::unique_ptr<LevelManager>> levels_;

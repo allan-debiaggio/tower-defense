@@ -83,6 +83,11 @@ Player &GameManager::getPlayer()
 
 void GameManager::resetPlayer()
 {
-  player_ = Player();
+  player_ = Player(30, 3); // Start with 30 coins, 3 lives
   playerName_.clear();
+}
+
+void GameManager::setCurrentLevelIndex(int idx)
+{
+  currentLevelIndex_ = idx;
 }

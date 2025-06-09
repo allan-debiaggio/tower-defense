@@ -1,0 +1,61 @@
+Tower Defense
+Dans le chaos des batailles, les tours demeurent les sentinelles silencieuses.
+
+Introduction du sujet
+Le tower defense est un jeu de stratégie dans lequel le joueur doit défendre
+une zone contre les vagues ennemies. Le joueur doit placer ses tours de façon
+stratégique pour qu’elles puissent attaquer efficacement les ennemies.
+Développer votre tower defense où il faut faire fonctionner un système de
+vague, un système de ressource et un système de construction pour valider le
+projet.
+Pour ce faire, rien de mieux qu’un peu d’UML pour ne pas se mélanger les
+pinceaux puis de design pattern pour implémenter le tout ! Il est donc
+important de faire de la veille technologique avant de vous lancer dans la
+conception du projet.
+
+_1
+
+Votre projet doit contenir au minimum :
+➔​ Un MVC du jeu;
+➔​ Deux designs patterns au choix, utiles pour le développement du jeu;
+➔​ Un diagramme utilisateur;
+➔​ Un diagramme de classe;
+➔​ La gestion complète du jeu, avec la gestion des victoires et défaites;
+➔​ L’utilisateur doit pouvoir gérer le son ;
+➔​ Un graphisme travaillé ;
+➔​ La gestion des barres de vie des ennemis ;
+➔​ La gestion des évolutions de vos tours de défense ;
+➔​ Un timer et un compteur de vagues ;
+➔​ La gestion du score ;
+➔​ Un tableau des scores.
+Lors du lancement du jeu, un menu doit être implémenté avec un accès aux
+différentes options (son, difficultés…), les crédits, quitter…
+
+Compétences visées
+➔​ Conception d’un MVC
+➔​ Comprendre l’intérêt des Design pattern
+➔​ Veilles technologiques sur les patrons de conception existants
+➔​ UML
+
+Rendu
+Votre travail est évalué en présentation avec un support. Le slide doit être
+composé de :
+➔ De l’organisation de votre équipe
+➔ Une documentation de votre travail : MVC, diagrammes et design patterns
+
+_2
+
+➔ De vos problèmes rencontrés ainsi que les solutions apportées
+➔ La démonstration jouable de votre jeu
+Le projet est à rendre sur https://github.com/prenom-nom/tower-defense
+
+Base de connaissances
+➔​ MVC : Qu'est-ce que c'est ?
+➔​ Les patrons de conceptions
+➔​ Le catalogue des patrons de conception
+➔​ Présentation des 14 types de diagramme de conception
+➔​ Tower defense
+
+_3
+
+
