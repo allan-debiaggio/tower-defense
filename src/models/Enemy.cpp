@@ -46,3 +46,6 @@ void Enemy::takeDamage(float amount)
 
 GoombaEnemy::GoombaEnemy(const Path &path)
     : Enemy(10.0f, 1.0f, path) {}
+
+KoopaEnemy::KoopaEnemy(const Path &path)
+    : Enemy(20.0f, 0.7f, path) {}

@@ -28,3 +28,10 @@ public:
   GoombaEnemy(const Path &path);
   // Can override update if needed
 };
+
+class KoopaEnemy : public Enemy
+{
+public:
+  KoopaEnemy(const Path &path);
+  // Can override update if needed
+};

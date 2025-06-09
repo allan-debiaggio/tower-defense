@@ -65,3 +65,7 @@ void LevelManager::reset()
       towers_[y][x].reset();
   // TODO: Add proper WaveManager reset logic if needed
 }
+void LevelManager::setEnemyFactories(const std::vector<WaveManager::EnemyFactory> &enemyFactories)
+{
+  waveManager_.setEnemyFactories(enemyFactories);
+}

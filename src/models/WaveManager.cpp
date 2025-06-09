@@ -1,8 +1,14 @@
 #include "WaveManager.h"
 #include <random>
 
-WaveManager::WaveManager(int numWaves, int enemiesPerWave, const std::vector<Path> &paths)
-    : numWaves_(numWaves), enemiesPerWave_(enemiesPerWave), currentWave_(0), waveActive_(false), paths_(paths), rng_(std::random_device{}()), pathDist_(0, paths.size() - 1) {}
+WaveManager::WaveManager(int numWaves, int baseEnemiesPerWave, const std::vector<Path> &paths, const std::vector<EnemyFactory> &enemyFactories)
+    : numWaves_(numWaves), baseEnemiesPerWave_(baseEnemiesPerWave), currentWave_(0), waveActive_(false), paths_(paths), rng_(std::random_device{}()), pathDist_(0, paths.size() - 1), enemyFactories_(enemyFactories), enemyTypeDist_(0, enemyFactories.empty() ? 0 : enemyFactories.size() - 1) {}
+
+void WaveManager::setEnemyFactories(const std::vector<EnemyFactory> &enemyFactories)
+{
+  enemyFactories_ = enemyFactories;
+  enemyTypeDist_ = std::uniform_int_distribution<size_t>(0, enemyFactories_.empty() ? 0 : enemyFactories_.size() - 1);
+}
 
 bool WaveManager::hasNextWave() const
 {
@@ -40,10 +46,15 @@ void WaveManager::update(float dt)
   if (!waveActive_)
     return;
   spawnTimer_ += dt;
-  while (spawnedThisWave_ < enemiesPerWave_ && spawnTimer_ >= spawnInterval_)
+  int enemiesPerWave = baseEnemiesPerWave_ + currentWave_; // Increase with level
+  while (spawnedThisWave_ < enemiesPerWave && spawnTimer_ >= spawnInterval_)
   {
     size_t pathIndex = pathDist_(rng_);
-    activeEnemies_.push_back(std::make_unique<GoombaEnemy>(paths_[pathIndex]));
+    size_t enemyType = enemyFactories_.empty() ? 0 : enemyTypeDist_(rng_);
+    if (!enemyFactories_.empty())
+      activeEnemies_.push_back(enemyFactories_[enemyType](paths_[pathIndex]));
+    else
+      activeEnemies_.push_back(std::make_unique<GoombaEnemy>(paths_[pathIndex]));
     ++spawnedThisWave_;
     spawnTimer_ -= spawnInterval_;
   }

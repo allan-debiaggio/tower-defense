@@ -23,6 +23,7 @@ public:
   size_t getNumPaths() const;
   WaveManager &getWaveManager();
   void reset();
+  void setEnemyFactories(const std::vector<WaveManager::EnemyFactory> &enemyFactories);
 
 private:
   int width_;
