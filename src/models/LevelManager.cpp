@@ -1,19 +1,21 @@
 #include "LevelManager.h"
 
-LevelManager::LevelManager(int width, int height, const Path &path, int numWaves, int enemiesPerWave)
+LevelManager::LevelManager(int width, int height, const std::vector<Path> &paths, int numWaves, int enemiesPerWave)
     : width_(width), height_(height), map_(height, std::vector<int>(width, 0)),
-      path_(path), waveManager_(numWaves, enemiesPerWave, path_)
+      paths_(paths), waveManager_(numWaves, enemiesPerWave, paths_)
 {
   towers_.resize(height_);
   for (int y = 0; y < height_; ++y)
     towers_[y].resize(width_);
-  // Example: mark path tiles as 1, buildable as 2, rest as 0
-  // (In a real game, this would be loaded from a file or generated)
-  for (size_t i = 0; i < path_.getNumWaypoints(); ++i)
+  // Mark all path tiles from all paths as 1
+  for (const auto &path : paths_)
   {
-    auto [x, y] = path_.getWaypoint(i);
-    if (x >= 0 && y >= 0 && x < width_ && y < height_)
-      map_[static_cast<int>(y)][static_cast<int>(x)] = 1;
+    for (size_t i = 0; i < path.getNumWaypoints(); ++i)
+    {
+      auto [x, y] = path.getWaypoint(i);
+      if (x >= 0 && y >= 0 && x < width_ && y < height_)
+        map_[static_cast<int>(y)][static_cast<int>(x)] = 1;
+    }
   }
   // Mark all non-path tiles as buildable (2)
   for (int y = 0; y < height_; ++y)
@@ -52,7 +54,9 @@ Tower *LevelManager::getTower(int x, int y) const
     return nullptr;
   return towers_[y][x].get();
 }
-const Path &LevelManager::getPath() const { return path_; }
+const std::vector<Path> &LevelManager::getPaths() const { return paths_; }
+const Path &LevelManager::getPath(size_t index) const { return paths_.at(index); }
+size_t LevelManager::getNumPaths() const { return paths_.size(); }
 WaveManager &LevelManager::getWaveManager() { return waveManager_; }
 void LevelManager::reset()
 {

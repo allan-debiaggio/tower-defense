@@ -1,8 +1,8 @@
 #include "WaveManager.h"
 #include <random>
 
-WaveManager::WaveManager(int numWaves, int enemiesPerWave, const Path &path)
-    : numWaves_(numWaves), enemiesPerWave_(enemiesPerWave), currentWave_(0), waveActive_(false), path_(path) {}
+WaveManager::WaveManager(int numWaves, int enemiesPerWave, const std::vector<Path> &paths)
+    : numWaves_(numWaves), enemiesPerWave_(enemiesPerWave), currentWave_(0), waveActive_(false), paths_(paths), rng_(std::random_device{}()), pathDist_(0, paths.size() - 1) {}
 
 bool WaveManager::hasNextWave() const
 {
@@ -42,8 +42,14 @@ void WaveManager::update(float dt)
   spawnTimer_ += dt;
   while (spawnedThisWave_ < enemiesPerWave_ && spawnTimer_ >= spawnInterval_)
   {
-    activeEnemies_.push_back(std::make_unique<GoombaEnemy>(path_));
+    size_t pathIndex = pathDist_(rng_);
+    activeEnemies_.push_back(std::make_unique<GoombaEnemy>(paths_[pathIndex]));
     ++spawnedThisWave_;
     spawnTimer_ -= spawnInterval_;
   }
+}
+
+size_t WaveManager::getNumPaths() const
+{
+  return paths_.size();
 }
