@@ -2,6 +2,12 @@
 #include <vector>
 #include <memory>
 #include "LevelManager.h"
+#include "GameState.h"
+
+class PlayingState;
+class PausedState;
+class GameOverState;
+class VictoryState;
 
 class GameManager
 {
@@ -14,8 +20,12 @@ public:
   void resetCurrentLevel();
   int getCurrentLevelIndex() const;
   int getTotalLevels() const;
+  void setState(std::unique_ptr<GameState> newState);
+  void update(float dt);
+  void handleInput();
 
 private:
   std::vector<std::unique_ptr<LevelManager>> levels_;
   int currentLevelIndex_;
+  std::unique_ptr<GameState> currentState_;
 };

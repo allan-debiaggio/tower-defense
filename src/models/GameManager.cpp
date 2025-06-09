@@ -44,3 +44,24 @@ int GameManager::getTotalLevels() const
 {
   return levels_.size();
 }
+
+void GameManager::setState(std::unique_ptr<GameState> newState)
+{
+  if (currentState_)
+    currentState_->exit(*this);
+  currentState_ = std::move(newState);
+  if (currentState_)
+    currentState_->enter(*this);
+}
+
+void GameManager::update(float dt)
+{
+  if (currentState_)
+    currentState_->update(*this, dt);
+}
+
+void GameManager::handleInput()
+{
+  if (currentState_)
+    currentState_->handleInput(*this);
+}
