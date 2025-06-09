@@ -17,9 +17,18 @@ void LevelSelectState::update(GameManager &manager, float dt)
 
 void LevelSelectState::handleInput(GameManager &manager)
 {
-  int choice;
-  std::cin >> choice;
-  // manager.setCurrentLevel(choice - 1); // If you have this method
+  int choice = 0;
+  while (choice < 1 || choice > 3)
+  {
+    std::cout << "Select a level (1-3): ";
+    std::cin >> choice;
+    if (choice < 1 || choice > 3)
+    {
+      std::cout << "Invalid choice. Please try again.\n";
+    }
+  }
+  std::cout << "Level " << choice << " selected.\n";
+  // TODO: manager.setCurrentLevel(choice - 1);
   manager.setState(std::make_unique<TowerPlacementState>());
 }
 

@@ -24,12 +24,15 @@ void MainMenuState::handleInput(GameManager &manager)
     std::string name;
     std::cout << "Enter your name: ";
     std::cin >> name;
-    // manager.setPlayerName(name);
+    manager.setPlayerName(name);
+    manager.resetPlayer(); // Reset player resources for new game
+    std::cout << "Welcome, " << manager.getPlayerName() << "!\n";
     manager.setState(std::make_unique<LevelSelectState>());
   }
   else
   {
     std::cout << "Goodbye!\n";
+    // Do not exit, just return
   }
 }
 
