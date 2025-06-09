@@ -3,6 +3,7 @@
 #include <memory>
 #include "LevelManager.h"
 #include "GameState.h"
+#include "Player.h"
 
 class PlayingState;
 class PausedState;
@@ -23,9 +24,15 @@ public:
   void setState(std::unique_ptr<GameState> newState);
   void update(float dt);
   void handleInput();
+  void setPlayerName(const std::string &name);
+  const std::string &getPlayerName() const;
+  Player &getPlayer();
+  void resetPlayer();
 
 private:
   std::vector<std::unique_ptr<LevelManager>> levels_;
   int currentLevelIndex_;
   std::unique_ptr<GameState> currentState_;
+  std::string playerName_;
+  Player player_;
 };

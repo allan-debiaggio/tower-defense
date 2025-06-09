@@ -65,3 +65,24 @@ void GameManager::handleInput()
   if (currentState_)
     currentState_->handleInput(*this);
 }
+
+void GameManager::setPlayerName(const std::string &name)
+{
+  playerName_ = name;
+}
+
+const std::string &GameManager::getPlayerName() const
+{
+  return playerName_;
+}
+
+Player &GameManager::getPlayer()
+{
+  return player_;
+}
+
+void GameManager::resetPlayer()
+{
+  player_ = Player();
+  playerName_.clear();
+}

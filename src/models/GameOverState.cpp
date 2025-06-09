@@ -1,22 +1,42 @@
 #include "GameOverState.h"
 #include "GameManager.h"
+#include "MainMenuState.h"
+#include "LevelSelectState.h"
 #include <iostream>
+#include <memory>
 
 void GameOverState::enter(GameManager &manager)
 {
   std::cout << "[STATE] Entering GameOverState\n";
+  std::cout << "Game Over!\n";
+  std::cout << "1. Replay\n2. Quit to Main Menu\n";
 }
 
 void GameOverState::update(GameManager &manager, float dt)
 {
-  std::cout << "[STATE] GameOverState update (dt=" << dt << ")\n";
-  // TODO: Add game over logic here
+  // No-op
 }
 
 void GameOverState::handleInput(GameManager &manager)
 {
-  std::cout << "[STATE] GameOverState handleInput\n";
-  // TODO: Add input handling logic here
+  int choice = 0;
+  while (choice != 1 && choice != 2)
+  {
+    std::cout << "Select option: ";
+    std::cin >> choice;
+    if (choice == 1)
+    {
+      manager.setState(std::make_unique<LevelSelectState>());
+    }
+    else if (choice == 2)
+    {
+      manager.setState(std::make_unique<MainMenuState>());
+    }
+    else
+    {
+      std::cout << "Invalid choice.\n";
+    }
+  }
 }
 
 void GameOverState::exit(GameManager &manager)
