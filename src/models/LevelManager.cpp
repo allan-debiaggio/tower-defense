@@ -69,3 +69,10 @@ void LevelManager::setEnemyFactories(const std::vector<WaveManager::EnemyFactory
 {
   waveManager_.setEnemyFactories(enemyFactories);
 }
+
+int LevelManager::getMapValue(int x, int y) const
+{
+  if (x < 0 || y < 0 || x >= width_ || y >= height_)
+    return 0;
+  return map_[y][x];
+}

@@ -24,6 +24,7 @@ public:
   WaveManager &getWaveManager();
   void reset();
   void setEnemyFactories(const std::vector<WaveManager::EnemyFactory> &enemyFactories);
+  int getMapValue(int x, int y) const;
 
 private:
   int width_;
