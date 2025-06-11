@@ -26,10 +26,12 @@ tower_defense: $(SRC)
 
 main_sfml: main_sfml.cpp \
     src/models/LevelManager.cpp src/models/Path.cpp src/models/Tower.cpp src/models/WaveManager.cpp src/models/Enemy.cpp \
-    src/models/Projectile.cpp src/models/Player.cpp
+    src/models/Projectile.cpp src/models/Player.cpp \
+    src/views/GameView.cpp src/views/LevelView.cpp
 	$(CXX) -std=c++17 -I/opt/homebrew/include -o $@ main_sfml.cpp \
 	    src/models/LevelManager.cpp src/models/Path.cpp src/models/Tower.cpp src/models/WaveManager.cpp src/models/Enemy.cpp \
 	    src/models/Projectile.cpp src/models/Player.cpp \
+	    src/views/GameView.cpp src/views/LevelView.cpp \
 	    -L/opt/homebrew/lib -lsfml-graphics -lsfml-window -lsfml-system
 
 clean:
