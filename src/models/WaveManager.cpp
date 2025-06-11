@@ -38,6 +38,11 @@ std::vector<std::unique_ptr<Enemy>> &WaveManager::getActiveEnemies()
   return activeEnemies_;
 }
 
+const std::vector<std::unique_ptr<Enemy>> &WaveManager::getActiveEnemies() const
+{
+  return activeEnemies_;
+}
+
 int WaveManager::getCurrentWave() const
 {
   return currentWave_;
@@ -53,10 +58,15 @@ void WaveManager::update(float dt)
   {
     size_t pathIndex = pathDist_(rng_);
     size_t enemyType = enemyFactories_.empty() ? 0 : enemyTypeDist_(rng_);
+    std::unique_ptr<Enemy> newEnemy;
     if (!enemyFactories_.empty())
-      activeEnemies_.push_back(enemyFactories_[enemyType](paths_[pathIndex]));
+      newEnemy = enemyFactories_[enemyType](paths_[pathIndex]);
     else
-      activeEnemies_.push_back(std::make_unique<GoombaEnemy>(paths_[pathIndex]));
+      newEnemy = std::make_unique<GoombaEnemy>(paths_[pathIndex]);
+    if (newEnemy)
+    {
+      activeEnemies_.push_back(std::move(newEnemy));
+    }
     ++spawnedThisWave_;
     spawnTimer_ -= spawnInterval_;
   }

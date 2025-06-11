@@ -15,6 +15,7 @@ public:
   void startNextWave();
   bool isWaveActive() const;
   std::vector<std::unique_ptr<Enemy>> &getActiveEnemies();
+  const std::vector<std::unique_ptr<Enemy>> &getActiveEnemies() const;
   int getCurrentWave() const;
   void update(float dt); // Call this every tick to spawn enemies over time
   size_t getNumPaths() const;

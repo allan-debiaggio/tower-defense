@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include <cmath>
+#include <iostream>
 
 Enemy::Enemy(float health, float speed, const Path &path)
     : health_(health), speed_(speed), path_(path), currentWaypoint_(0)
@@ -9,31 +10,30 @@ Enemy::Enemy(float health, float speed, const Path &path)
 
 void Enemy::update(float dt)
 {
-  if (currentWaypoint_ + 1 >= path_.getNumWaypoints())
+  float remainingDist = speed_ * dt;
+  while (remainingDist > 0 && currentWaypoint_ + 1 < path_.getNumWaypoints())
   {
-    // If already at the last waypoint, increment to signal removal
-    ++currentWaypoint_;
-    return;
-  }
-  auto [x, y] = position_;
-  auto [tx, ty] = path_.getWaypoint(currentWaypoint_ + 1);
-  float dx = tx - x;
-  float dy = ty - y;
-  float dist = std::sqrt(dx * dx + dy * dy);
-  if (dist < 1e-3)
-  {
-    ++currentWaypoint_;
-    return;
-  }
-  float moveDist = speed_ * dt;
-  if (moveDist >= dist)
-  {
-    position_ = {tx, ty};
-    ++currentWaypoint_;
-  }
-  else
-  {
-    position_ = {x + dx / dist * moveDist, y + dy / dist * moveDist};
+    auto [x, y] = position_;
+    auto [tx, ty] = path_.getWaypoint(currentWaypoint_ + 1);
+    float dx = tx - x;
+    float dy = ty - y;
+    float dist = std::sqrt(dx * dx + dy * dy);
+    if (dist < 1e-3)
+    {
+      ++currentWaypoint_;
+      continue;
+    }
+    if (remainingDist >= dist)
+    {
+      position_ = {tx, ty};
+      ++currentWaypoint_;
+      remainingDist -= dist;
+    }
+    else
+    {
+      position_ = {x + dx / dist * remainingDist, y + dy / dist * remainingDist};
+      remainingDist = 0;
+    }
   }
 }
 
@@ -49,7 +49,7 @@ void Enemy::takeDamage(float amount)
 }
 
 GoombaEnemy::GoombaEnemy(const Path &path)
-    : Enemy(10.0f, 1.0f, path) {}
+    : Enemy(10.0f, 0.5f, path) {}
 
 KoopaEnemy::KoopaEnemy(const Path &path)
     : Enemy(20.0f, 0.7f, path) {}

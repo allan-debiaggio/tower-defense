@@ -58,6 +58,7 @@ const std::vector<Path> &LevelManager::getPaths() const { return paths_; }
 const Path &LevelManager::getPath(size_t index) const { return paths_.at(index); }
 size_t LevelManager::getNumPaths() const { return paths_.size(); }
 WaveManager &LevelManager::getWaveManager() { return waveManager_; }
+const WaveManager &LevelManager::getWaveManager() const { return waveManager_; }
 void LevelManager::reset()
 {
   for (int y = 0; y < height_; ++y)

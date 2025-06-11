@@ -22,6 +22,7 @@ public:
   const Path &getPath(size_t index) const;
   size_t getNumPaths() const;
   WaveManager &getWaveManager();
+  const WaveManager &getWaveManager() const;
   void reset();
   void setEnemyFactories(const std::vector<WaveManager::EnemyFactory> &enemyFactories);
   int getMapValue(int x, int y) const;

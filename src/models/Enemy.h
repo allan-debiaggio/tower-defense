@@ -14,6 +14,8 @@ public:
   bool isAlive() const;
   void takeDamage(float amount);
   bool hasReachedEnd() const { return currentWaypoint_ + 1 >= path_.getNumWaypoints(); }
+  size_t getCurrentWaypoint() const { return currentWaypoint_; }
+  float getSpeed() const { return speed_; }
 
 protected:
   float health_;

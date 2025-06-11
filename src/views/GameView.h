@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "LevelView.h"
+#include "TowerView.h"
+#include "EnemyView.h"
 #include "../models/LevelManager.h"
 
 class GameView
@@ -11,4 +13,6 @@ public:
 
 private:
   LevelView m_levelView;
+  TowerView m_towerView;
+  EnemyView m_enemyView;
 };
