@@ -24,5 +24,13 @@ all: tower_defense
 tower_defense: $(SRC)
 	$(CXX) $(CXXFLAGS) -o $@ $(SRC)
 
+main_sfml: main_sfml.cpp \
+    src/models/LevelManager.cpp src/models/Path.cpp src/models/Tower.cpp src/models/WaveManager.cpp src/models/Enemy.cpp \
+    src/models/Projectile.cpp src/models/Player.cpp
+	$(CXX) -std=c++17 -I/opt/homebrew/include -o $@ main_sfml.cpp \
+	    src/models/LevelManager.cpp src/models/Path.cpp src/models/Tower.cpp src/models/WaveManager.cpp src/models/Enemy.cpp \
+	    src/models/Projectile.cpp src/models/Player.cpp \
+	    -L/opt/homebrew/lib -lsfml-graphics -lsfml-window -lsfml-system
+
 clean:
 	rm -f tower_defense *.o src/models/*.o 
