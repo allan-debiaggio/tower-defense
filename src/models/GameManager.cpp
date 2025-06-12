@@ -91,3 +91,15 @@ void GameManager::setCurrentLevelIndex(int idx)
 {
   currentLevelIndex_ = idx;
 }
+
+void GameManager::handleEvent(const sf::Event &event, sf::RenderWindow &window)
+{
+  if (currentState_)
+    currentState_->handleEvent(event, window, *this);
+}
+
+void GameManager::draw(sf::RenderWindow &window)
+{
+  if (currentState_)
+    currentState_->draw(window);
+}

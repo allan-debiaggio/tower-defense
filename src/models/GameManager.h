@@ -4,6 +4,7 @@
 #include "LevelManager.h"
 #include "GameState.h"
 #include "Player.h"
+#include <SFML/Graphics.hpp>
 
 class PlayingState;
 class PausedState;
@@ -29,6 +30,8 @@ public:
   Player &getPlayer();
   void resetPlayer();
   void setCurrentLevelIndex(int idx);
+  void handleEvent(const sf::Event &event, sf::RenderWindow &window);
+  void draw(sf::RenderWindow &window);
 
 private:
   std::vector<std::unique_ptr<LevelManager>> levels_;

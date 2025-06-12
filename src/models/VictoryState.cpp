@@ -1,10 +1,11 @@
 #include "VictoryState.h"
 #include "GameManager.h"
 #include "MainMenuState.h"
-#include "LevelSelectState.h"
-#include "TowerPlacementState.h"
+#include "PlayingState.h"
 #include <iostream>
 #include <memory>
+
+VictoryState::VictoryState() noexcept = default;
 
 void VictoryState::enter(GameManager &manager)
 {
@@ -18,6 +19,31 @@ void VictoryState::update(GameManager &manager, float dt)
   // No-op
 }
 
+void VictoryState::onVictoryOptionSelected(GameManager &manager, int option, unsigned int windowWidth, unsigned int windowHeight)
+{
+  if (option == 1)
+  {
+    if (manager.nextLevel())
+    {
+      std::cout << "Starting next level!\n";
+      manager.setState(std::make_unique<PlayingState>(windowWidth, windowHeight));
+    }
+    else
+    {
+      std::cout << "No more levels! Returning to main menu.\n";
+      manager.setState(std::make_unique<MainMenuState>(windowWidth, windowHeight));
+    }
+  }
+  else if (option == 2)
+  {
+    manager.setState(std::make_unique<MainMenuState>(windowWidth, windowHeight));
+  }
+  else
+  {
+    std::cout << "Invalid choice.\n";
+  }
+}
+
 void VictoryState::handleInput(GameManager &manager)
 {
   int choice = 0;
@@ -25,27 +51,7 @@ void VictoryState::handleInput(GameManager &manager)
   {
     std::cout << "Select option: ";
     std::cin >> choice;
-    if (choice == 1)
-    {
-      if (manager.nextLevel())
-      {
-        std::cout << "Starting next level!\n";
-        manager.setState(std::make_unique<TowerPlacementState>());
-      }
-      else
-      {
-        std::cout << "No more levels! Returning to main menu.\n";
-        manager.setState(std::make_unique<MainMenuState>());
-      }
-    }
-    else if (choice == 2)
-    {
-      manager.setState(std::make_unique<MainMenuState>());
-    }
-    else
-    {
-      std::cout << "Invalid choice.\n";
-    }
+    onVictoryOptionSelected(manager, choice, 800, 600);
   }
 }
 
@@ -53,3 +59,5 @@ void VictoryState::exit(GameManager &manager)
 {
   std::cout << "[STATE] Exiting VictoryState\n";
 }
+
+void VictoryState::handleEvent(const sf::Event &event, sf::RenderWindow &window, GameManager &manager) {}

@@ -5,6 +5,8 @@
 #include <iostream>
 #include <memory>
 
+PausedState::PausedState() noexcept = default;
+
 void PausedState::enter(GameManager &manager)
 {
   std::cout << "[STATE] Entering PausedState\n";
@@ -18,6 +20,22 @@ void PausedState::update(GameManager &manager, float dt)
   // No game logic while paused
 }
 
+void PausedState::onPauseOptionSelected(GameManager &manager, int option, unsigned int windowWidth, unsigned int windowHeight)
+{
+  if (option == 1)
+  {
+    manager.setState(std::make_unique<PlayingState>(windowWidth, windowHeight));
+  }
+  else if (option == 2)
+  {
+    manager.setState(std::make_unique<MainMenuState>(windowWidth, windowHeight));
+  }
+  else
+  {
+    std::cout << "Invalid choice.\n";
+  }
+}
+
 void PausedState::handleInput(GameManager &manager)
 {
   int choice = 0;
@@ -25,18 +43,7 @@ void PausedState::handleInput(GameManager &manager)
   {
     std::cout << "Select option: ";
     std::cin >> choice;
-    if (choice == 1)
-    {
-      manager.setState(std::make_unique<PlayingState>());
-    }
-    else if (choice == 2)
-    {
-      manager.setState(std::make_unique<MainMenuState>());
-    }
-    else
-    {
-      std::cout << "Invalid choice.\n";
-    }
+    onPauseOptionSelected(manager, choice, 0, 0);
   }
 }
 
@@ -44,3 +51,5 @@ void PausedState::exit(GameManager &manager)
 {
   std::cout << "[STATE] Exiting PausedState\n";
 }
+
+void PausedState::handleEvent(const sf::Event &event, sf::RenderWindow &window, GameManager &manager) {}

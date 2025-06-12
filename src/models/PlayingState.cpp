@@ -78,6 +78,11 @@ namespace
   }
 } // end anonymous namespace
 
+PlayingState::PlayingState() : m_windowWidth(800), m_windowHeight(600) {}
+
+PlayingState::PlayingState(unsigned int windowWidth, unsigned int windowHeight)
+    : m_windowWidth(windowWidth), m_windowHeight(windowHeight) {}
+
 void PlayingState::enter(GameManager &manager)
 {
   std::cout << "[STATE] Entering PlayingState\n";
