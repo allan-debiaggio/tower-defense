@@ -3,7 +3,13 @@
 #include <iostream>
 
 TowerPlacementController::TowerPlacementController(LevelManager *level, Player *player, unsigned int tileSize)
-    : m_level(level), m_player(player), m_tileSize(tileSize) {}
+    : m_level(level), m_player(player), m_tileSize(tileSize)
+{
+  if (m_crownTexture.loadFromFile("assets/ui_crown.png"))
+    m_crownTextureLoaded = true;
+  if (m_moneyBagTexture.loadFromFile("assets/ui_money_bag.png"))
+    m_moneyBagTextureLoaded = true;
+}
 
 void TowerPlacementController::handleEvent(const sf::Event &event, const sf::RenderWindow &window)
 {
@@ -16,12 +22,19 @@ void TowerPlacementController::handleEvent(const sf::Event &event, const sf::Ren
         int mouseX = mouseEvent->position.x;
         int mouseY = mouseEvent->position.y;
         sf::Vector2i cell = getCellFromMouse(window, mouseX, mouseY);
-        if (!m_showPopup)
+        if (!m_showPopup && !m_showUpgradePopup)
         {
-          // Show popup menu at clicked cell
+          // If clicking on a tower, show upgrade/sell popup
+          Tower *tower = m_level->getTower(cell.x, cell.y);
+          if (tower)
+          {
+            showUpgradePopupAtCell(cell);
+            return;
+          }
+          // Otherwise, show placement popup
           showPopupAtCell(cell);
         }
-        else
+        else if (m_showPopup)
         {
           // Check if click is inside popup menu
           sf::Vector2f popupPos(m_popupCell.x * m_tileSize, m_popupCell.y * m_tileSize);
@@ -47,6 +60,29 @@ void TowerPlacementController::handleEvent(const sf::Event &event, const sf::Ren
             hidePopup();
           }
         }
+        else if (m_showUpgradePopup)
+        {
+          // Handle upgrade/sell popup click
+          sf::Vector2f popupPos(m_upgradePopupCell.x * m_tileSize, m_upgradePopupCell.y * m_tileSize);
+          sf::FloatRect popupRect(popupPos, sf::Vector2f(m_tileSize * 2, m_tileSize));
+          if (popupRect.contains(sf::Vector2f(mouseX, mouseY)))
+          {
+            float relX = mouseX - popupPos.x;
+            if (relX < m_tileSize)
+            {
+              tryUpgradeTower(m_upgradePopupCell);
+            }
+            else
+            {
+              trySellTower(m_upgradePopupCell);
+            }
+            hideUpgradePopup();
+          }
+          else
+          {
+            hideUpgradePopup();
+          }
+        }
       }
     }
   }
@@ -68,11 +104,16 @@ void TowerPlacementController::draw(sf::RenderWindow &window)
   {
     drawPopupMenu(window);
   }
+  if (m_showUpgradePopup)
+  {
+    drawUpgradePopupMenu(window);
+  }
   // Draw placement feedback if hovering
   if (m_showPopup)
   {
     drawPlacementFeedback(window, m_popupCell, m_lastPlacementValid);
   }
+  drawMessage(window);
 }
 
 bool TowerPlacementController::towerPlaced() const
@@ -177,4 +218,113 @@ void TowerPlacementController::drawPlacementFeedback(sf::RenderWindow &window, c
   highlight.setOutlineThickness(4);
   highlight.setOutlineColor(valid ? sf::Color(0, 200, 0, 180) : sf::Color(200, 0, 0, 180));
   window.draw(highlight);
+}
+
+void TowerPlacementController::showUpgradePopupAtCell(const sf::Vector2i &cell)
+{
+  m_showUpgradePopup = true;
+  m_upgradePopupCell = cell;
+}
+void TowerPlacementController::hideUpgradePopup()
+{
+  m_showUpgradePopup = false;
+}
+
+void TowerPlacementController::tryUpgradeTower(const sf::Vector2i &cell)
+{
+  Tower *tower = m_level->getTower(cell.x, cell.y);
+  if (!tower)
+    return;
+  if (!tower->canUpgrade())
+  {
+    m_message = "Maximum level reached";
+    m_messageTimer = 2.5f;
+    return;
+  }
+  int cost = tower->getUpgradeCost();
+  if (m_player->getCoins() < cost)
+  {
+    m_message = "Not enough coins";
+    m_messageTimer = 2.5f;
+    return;
+  }
+  int coins = m_player->getCoins();
+  if (tower->upgrade(coins))
+  {
+    m_player->spendCoins(cost); // sync coins
+    m_message = "Tower upgraded!";
+    m_messageTimer = 1.5f;
+  }
+  else
+  {
+    m_message = "Upgrade failed";
+    m_messageTimer = 2.0f;
+  }
+}
+void TowerPlacementController::trySellTower(const sf::Vector2i &cell)
+{
+  Tower *tower = m_level->getTower(cell.x, cell.y);
+  if (!tower)
+    return;
+  int value = tower->getSellValue();
+  m_player->addCoins(value);
+  m_level->removeTower(cell.x, cell.y);
+  m_message = "Tower sold!";
+  m_messageTimer = 1.5f;
+}
+
+void TowerPlacementController::drawUpgradePopupMenu(sf::RenderWindow &window)
+{
+  sf::Vector2f popupPos(m_upgradePopupCell.x * m_tileSize, m_upgradePopupCell.y * m_tileSize);
+  sf::RectangleShape popupBg(sf::Vector2f(m_tileSize * 2, m_tileSize));
+  popupBg.setPosition(popupPos);
+  popupBg.setFillColor(sf::Color(255, 255, 240, 240));
+  popupBg.setOutlineColor(sf::Color::Black);
+  popupBg.setOutlineThickness(2);
+  window.draw(popupBg);
+  // Crown icon (upgrade, left)
+  if (m_crownTextureLoaded)
+  {
+    sf::Sprite crown(m_crownTexture);
+    crown.setScale(sf::Vector2f(m_tileSize * 0.85f / m_crownTexture.getSize().x, m_tileSize * 0.85f / m_crownTexture.getSize().y));
+    crown.setPosition(sf::Vector2f(popupPos.x + m_tileSize * 0.075f, popupPos.y + m_tileSize * 0.075f));
+    window.draw(crown);
+  }
+  // Money bag icon (sell, right)
+  if (m_moneyBagTextureLoaded)
+  {
+    sf::Sprite bag(m_moneyBagTexture);
+    bag.setScale(sf::Vector2f(m_tileSize * 0.85f / m_moneyBagTexture.getSize().x, m_tileSize * 0.85f / m_moneyBagTexture.getSize().y));
+    bag.setPosition(sf::Vector2f(popupPos.x + m_tileSize + m_tileSize * 0.075f, popupPos.y + m_tileSize * 0.075f));
+    window.draw(bag);
+  }
+  // No text labels, just icons
+}
+
+void TowerPlacementController::drawMessage(sf::RenderWindow &window)
+{
+  if (m_messageTimer > 0.0f && !m_message.empty())
+  {
+    sf::Font font;
+    if (font.openFromFile("/System/Library/Fonts/Supplemental/Arial Bold.ttf"))
+    {
+      sf::Text msg(font, m_message, 28);
+      msg.setFillColor(sf::Color(255, 220, 40));
+      msg.setOutlineColor(sf::Color::Black);
+      msg.setOutlineThickness(3);
+      msg.setStyle(sf::Text::Bold);
+      auto bounds = msg.getLocalBounds();
+      float x = (window.getSize().x - bounds.size.x) / 2.0f;
+      float y = window.getSize().y - 60.0f;
+      msg.setPosition(sf::Vector2f(x, y));
+      window.draw(msg);
+    }
+    // Decrement timer (should be called from update, but for now, do it here)
+    m_messageTimer -= 1.0f / 60.0f; // Approximate for 60 FPS
+    if (m_messageTimer <= 0.0f)
+    {
+      m_message.clear();
+      m_messageTimer = 0.0f;
+    }
+  }
 }

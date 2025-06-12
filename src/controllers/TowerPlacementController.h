@@ -35,6 +35,18 @@ private:
   // Placement feedback
   bool m_lastPlacementValid = false;
   bool m_towerPlaced = false;
+  // --- Upgrade/Sell UI additions ---
+  // Popup for upgrade/sell
+  bool m_showUpgradePopup = false;
+  sf::Vector2i m_upgradePopupCell;
+  // For displaying message (e.g., max level)
+  std::string m_message;
+  float m_messageTimer = 0.0f;
+  // Textures for icons
+  mutable sf::Texture m_crownTexture;
+  mutable bool m_crownTextureLoaded = false;
+  mutable sf::Texture m_moneyBagTexture;
+  mutable bool m_moneyBagTextureLoaded = false;
   // Helper
   sf::Vector2i getCellFromMouse(const sf::RenderWindow &window, int mouseX, int mouseY) const;
   void showPopupAtCell(const sf::Vector2i &cell);
@@ -42,4 +54,11 @@ private:
   void tryPlaceTower(const sf::Vector2i &cell, TowerType type);
   void drawPopupMenu(sf::RenderWindow &window);
   void drawPlacementFeedback(sf::RenderWindow &window, const sf::Vector2i &cell, bool valid);
+  // Helper for upgrade/sell
+  void showUpgradePopupAtCell(const sf::Vector2i &cell);
+  void hideUpgradePopup();
+  void tryUpgradeTower(const sf::Vector2i &cell);
+  void trySellTower(const sf::Vector2i &cell);
+  void drawUpgradePopupMenu(sf::RenderWindow &window);
+  void drawMessage(sf::RenderWindow &window);
 };
