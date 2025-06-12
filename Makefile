@@ -24,7 +24,7 @@ all: tower_defense
 tower_defense: $(SRC)
 	$(CXX) $(CXXFLAGS) -o $@ $(SRC)
 
-SFML_SOURCES = main_sfml.cpp src/views/GameView.cpp src/views/LevelView.cpp src/views/EnemyView.cpp src/views/TowerView.cpp src/views/HUDView.cpp
+SFML_SOURCES = main_sfml.cpp src/views/GameView.cpp src/views/LevelView.cpp src/views/EnemyView.cpp src/views/TowerView.cpp src/views/HUDView.cpp src/controllers/TowerPlacementController.cpp
 MODEL_SOURCES = src/models/LevelManager.cpp src/models/Path.cpp src/models/Tower.cpp src/models/WaveManager.cpp src/models/Enemy.cpp \
     src/models/Projectile.cpp src/models/Player.cpp
 LDFLAGS_SFML = -L/opt/homebrew/lib -lsfml-graphics -lsfml-window -lsfml-system

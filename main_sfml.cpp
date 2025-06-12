@@ -4,6 +4,8 @@
 #include "src/views/GameView.h"
 #include "src/models/Tower.h"
 #include <iostream>
+#include "src/views/HUDView.h"
+#include "src/controllers/TowerPlacementController.h"
 
 int main()
 {
@@ -42,6 +44,10 @@ int main()
   sf::RenderWindow window(sf::VideoMode(sf::Vector2u(width * tileSize, height * tileSize)), "Tower Defense - SFML");
 
   GameView gameView(tileSize);
+  HUDView hudView(width * tileSize, tileSize);
+
+  Player player(30, 3);
+  TowerPlacementController placementController(level.get(), &player, tileSize);
 
   sf::Clock clock;
   while (window.isOpen())
@@ -51,6 +57,8 @@ int main()
       const sf::Event &event = *eventOpt;
       if (event.is<sf::Event::Closed>())
         window.close();
+      // Handle tower placement events
+      placementController.handleEvent(event, window);
     }
     // Update enemies (simulate time)
     float dt = clock.restart().asSeconds();
@@ -67,7 +75,8 @@ int main()
 
     window.clear(sf::Color::Black);
     gameView.render(window, *level);
-
+    placementController.draw(window);
+    hudView.render(window, player, *level);
     window.display();
   }
   return 0;
