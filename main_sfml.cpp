@@ -6,6 +6,7 @@
 #include <iostream>
 #include "src/views/HUDView.h"
 #include "src/controllers/TowerPlacementController.h"
+#include <list>
 
 int main()
 {
@@ -48,6 +49,7 @@ int main()
 
   Player player(30, 3);
   TowerPlacementController placementController(level.get(), &player, tileSize);
+  std::list<std::unique_ptr<Projectile>> activeProjectiles;
 
   sf::Clock clock;
   while (window.isOpen())
@@ -72,9 +74,44 @@ int main()
         enemyPtr->update(dt);
       }
     }
+    // Towers shoot, collect new projectiles
+    for (int y = 0; y < level->getHeight(); ++y)
+    {
+      for (int x = 0; x < level->getWidth(); ++x)
+      {
+        Tower *tower = level->getTower(x, y);
+        if (tower)
+        {
+          std::vector<Enemy *> enemyPtrs;
+          for (const auto &ep : level->getWaveManager().getActiveEnemies())
+            if (ep && ep->isAlive())
+              enemyPtrs.push_back(ep.get());
+          auto projectiles = tower->update(dt, enemyPtrs);
+          for (auto *proj : projectiles)
+          {
+            if (proj)
+              activeProjectiles.emplace_back(proj);
+          }
+        }
+      }
+    }
+    // Update all projectiles, remove hit ones
+    for (auto it = activeProjectiles.begin(); it != activeProjectiles.end();)
+    {
+      (*it)->update(dt);
+      if ((*it)->hasHit())
+      {
+        it = activeProjectiles.erase(it);
+      }
+      else
+      {
+        ++it;
+      }
+    }
 
     window.clear(sf::Color::Black);
     gameView.render(window, *level);
+    gameView.renderProjectiles(window, activeProjectiles);
     placementController.draw(window);
     hudView.render(window, player, *level);
     window.display();
