@@ -5,7 +5,7 @@ LevelView::LevelView(unsigned int tileSize)
     : m_tileSize(tileSize) {}
 
 void LevelView::render(sf::RenderWindow &window, const LevelManager &level) const
-{./
+{
   unsigned int width = level.getWidth();
   unsigned int height = level.getHeight();
   for (unsigned int y = 0; y < height; ++y)

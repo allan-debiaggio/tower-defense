@@ -108,6 +108,29 @@ int main()
         ++it;
       }
     }
+    // Remove dead enemies, award coins, and handle enemies reaching the end
+    auto &enemies = level->getWaveManager().getActiveEnemies();
+    for (auto it = enemies.begin(); it != enemies.end();)
+    {
+      if (*it && !(*it)->isAlive())
+      {
+        auto pos = (*it)->getPosition();
+        if (!(*it)->hasReachedEnd())
+        {
+          player.addCoins(5); // Reward for kill
+        }
+        it = enemies.erase(it);
+      }
+      else if (*it && (*it)->isAlive() && (*it)->hasReachedEnd())
+      {
+        player.loseLife();
+        it = enemies.erase(it);
+      }
+      else
+      {
+        ++it;
+      }
+    }
 
     window.clear(sf::Color::Black);
     gameView.render(window, *level);
