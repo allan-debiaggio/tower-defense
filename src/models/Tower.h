@@ -29,6 +29,7 @@ protected:
 
   int level_ = 0;
   int upgradeCost_ = 10;
+  int totalSpent_ = 10; // Track total coins spent on this tower
 };
 
 class FireFlowerTower : public Tower

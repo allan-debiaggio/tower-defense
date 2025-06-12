@@ -99,7 +99,7 @@ int main()
     for (auto it = activeProjectiles.begin(); it != activeProjectiles.end();)
     {
       (*it)->update(dt);
-      if ((*it)->hasHit())
+      if ((*it)->hasHit() || (*it)->getTarget() == nullptr)
       {
         it = activeProjectiles.erase(it);
       }
@@ -118,6 +118,19 @@ int main()
         if (!(*it)->hasReachedEnd())
         {
           player.addCoins(5); // Reward for kill
+        }
+        // Nullify projectiles targeting this soon-to-be-erased enemy
+        for (auto &proj : activeProjectiles)
+        {
+          if (proj && proj->getTarget() == it->get())
+          {
+            // Access protected member: use a cast to Projectile* and set target_ directly
+            struct ProjectileHack : Projectile
+            {
+              using Projectile::target_;
+            };
+            static_cast<ProjectileHack *>(proj.get())->target_ = nullptr;
+          }
         }
         it = enemies.erase(it);
       }

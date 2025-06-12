@@ -10,4 +10,7 @@ public:
 
 private:
   unsigned int m_tileSize;
+  // Mario crown icon for upgrades
+  mutable sf::Texture m_crownTexture;
+  mutable bool m_crownTextureLoaded = false;
 };

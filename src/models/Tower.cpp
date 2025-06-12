@@ -3,7 +3,7 @@
 #include <iostream>
 
 Tower::Tower(std::pair<float, float> position, float range, float fireRate)
-    : position_(position), range_(range), fireRate_(fireRate), timeSinceLastShot_(0.0f), level_(1), upgradeCost_(10) {}
+    : position_(position), range_(range), fireRate_(fireRate), timeSinceLastShot_(0.0f), level_(1), upgradeCost_(10), totalSpent_(10) {}
 
 std::vector<Projectile *> Tower::update(float dt, std::vector<Enemy *> &enemies)
 {
@@ -89,18 +89,11 @@ bool Tower::upgrade(int &playerCoins)
   ++level_;
   range_ *= 1.2f;
   fireRate_ *= 1.2f;
+  totalSpent_ += upgradeCost_; // Track upgrade spending
   upgradeCost_ = static_cast<int>(upgradeCost_ * 1.5f);
   return true;
 }
 int Tower::getSellValue() const
 {
-  // Assume base cost 10, upgrades add upgradeCost_ (approximate)
-  int totalSpent = 10;
-  int cost = 10;
-  for (int i = 0; i < level_; ++i)
-  {
-    cost = static_cast<int>(cost * 1.5f);
-    totalSpent += cost;
-  }
-  return static_cast<int>(totalSpent * 0.75f);
+  return static_cast<int>(totalSpent_ * 0.75f);
 }
