@@ -158,6 +158,11 @@ void PlayingState::update(GameManager &manager, float dt)
     else
       ++it;
   }
+  // Auto-start next wave if previous wave finished and more waves remain
+  if (!waveManager.isWaveActive() && waveManager.hasNextWave() && waveManager.getActiveEnemies().empty())
+  {
+    waveManager.startNextWave();
+  }
   // Check for defeat
   if (m_player->getLives() <= 0)
   {
