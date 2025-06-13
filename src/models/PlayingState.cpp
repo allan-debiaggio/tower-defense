@@ -85,166 +85,104 @@ PlayingState::PlayingState(unsigned int windowWidth, unsigned int windowHeight)
 
 void PlayingState::enter(GameManager &manager)
 {
-  std::cout << "[STATE] Entering PlayingState\n";
-  auto &level = *manager.getCurrentLevel();
-  auto &waveManager = level.getWaveManager();
+  std::cout << "[STATE] Entering PlayingState (SFML)\n";
+  m_level = manager.getCurrentLevel();
+  m_player = &manager.getPlayer();
+  const unsigned int tileSize = 64;
+  m_gameView = std::make_unique<GameView>(tileSize);
+  m_hudView = std::make_unique<HUDView>(m_level->getWidth() * tileSize, tileSize);
+  m_placementController = std::make_unique<TowerPlacementController>(m_level, m_player, tileSize);
+  m_activeProjectiles.clear();
+  // Start the first wave if not already started
+  auto &waveManager = m_level->getWaveManager();
   if (!waveManager.isWaveActive() && waveManager.hasNextWave())
-  {
     waveManager.startNextWave();
-    int waveNum = waveManager.getCurrentWave();
-    int enemiesThisWave = level.getWaveManager().getBaseEnemiesPerWave() + waveNum;
-    std::cout << "\n--- Wave " << waveNum << " begins! Enemies this wave: " << enemiesThisWave << " ---\n";
-  }
 }
 
 void PlayingState::update(GameManager &manager, float dt)
 {
-  auto &level = *manager.getCurrentLevel();
-  auto &waveManager = level.getWaveManager();
-  auto &player = manager.getPlayer();
-
-  // Static list of projectiles for the session
-  static std::list<std::unique_ptr<Projectile>> activeProjectiles;
-
-  // Auto-tick: run several small updates per Enter
-  const int numTicks = 5;
-  const float tickDt = dt / numTicks;
-  for (int tick = 0; tick < numTicks; ++tick)
+  auto &waveManager = m_level->getWaveManager();
+  // Update enemies
+  waveManager.update(dt);
+  for (const auto &enemyPtr : waveManager.getActiveEnemies())
+    if (enemyPtr)
+      enemyPtr->update(dt);
+  // Towers shoot, collect new projectiles
+  for (int y = 0; y < m_level->getHeight(); ++y)
+    for (int x = 0; x < m_level->getWidth(); ++x)
+      if (Tower *tower = m_level->getTower(x, y))
+      {
+        std::vector<Enemy *> enemyPtrs;
+        for (const auto &ep : waveManager.getActiveEnemies())
+          if (ep && ep->isAlive())
+            enemyPtrs.push_back(ep.get());
+        auto projectiles = tower->update(dt, enemyPtrs);
+        for (auto *proj : projectiles)
+          if (proj)
+            m_activeProjectiles.emplace_back(proj);
+      }
+  // Update projectiles, remove hit ones
+  for (auto it = m_activeProjectiles.begin(); it != m_activeProjectiles.end();)
   {
-    waveManager.update(tickDt);
-    auto &enemies = waveManager.getActiveEnemies();
-
-    // 1. Update all enemies (move them)
-    for (auto &enemy : enemies)
+    (*it)->update(dt);
+    if ((*it)->hasHit() || (*it)->getTarget() == nullptr)
+      it = m_activeProjectiles.erase(it);
+    else
+      ++it;
+  }
+  // Remove dead enemies, award coins, handle enemies reaching end
+  auto &enemies = waveManager.getActiveEnemies();
+  for (auto it = enemies.begin(); it != enemies.end();)
+  {
+    if (*it && !(*it)->isAlive())
     {
-      if (enemy && enemy->isAlive())
-      {
-        enemy->update(tickDt);
-      }
-    }
-
-    // 2. Towers shoot, collect new projectiles
-    for (int y = 0; y < level.getHeight(); ++y)
-    {
-      for (int x = 0; x < level.getWidth(); ++x)
-      {
-        Tower *tower = level.getTower(x, y);
-        if (tower)
+      if (!(*it)->hasReachedEnd())
+        m_player->addCoins(5);
+      // Nullify projectiles targeting this soon-to-be-erased enemy
+      for (auto &proj : m_activeProjectiles)
+        if (proj && proj->getTarget() == it->get())
         {
-          std::vector<Enemy *> enemyPtrs;
-          for (auto &ep : enemies)
-            if (ep && ep->isAlive())
-              enemyPtrs.push_back(ep.get());
-          auto projectiles = tower->update(tickDt, enemyPtrs);
-          for (auto *proj : projectiles)
+          struct ProjectileHack : Projectile
           {
-            if (proj)
-            {
-              std::cout << "[DEBUG] Tower at (" << x << "," << y << ") shoots!\n";
-              activeProjectiles.emplace_back(proj);
-            }
-          }
+            using Projectile::target_;
+          };
+          static_cast<ProjectileHack *>(proj.get())->target_ = nullptr;
         }
-      }
+      it = enemies.erase(it);
     }
-
-    // 3. Update all projectiles, print hits, and remove hit projectiles
-    for (auto it = activeProjectiles.begin(); it != activeProjectiles.end();)
+    else if (*it && (*it)->isAlive() && (*it)->hasReachedEnd())
     {
-      auto &proj = *it;
-      float beforeHP = proj->getTarget() ? proj->getTarget()->getHealth() : 0;
-      proj->update(tickDt);
-      float afterHP = proj->getTarget() ? proj->getTarget()->getHealth() : 0;
-      if (proj->hasHit())
-      {
-        if (beforeHP != afterHP)
-        {
-          std::cout << "\033[32m[DEBUG] Projectile hit! Enemy HP: " << beforeHP << " -> " << afterHP << "\033[0m\n";
-        }
-        it = activeProjectiles.erase(it);
-      }
-      else
-      {
-        ++it;
-      }
-    }
-
-    // 4. Remove dead enemies, print deaths, and handle enemies reaching the end
-    for (auto it = enemies.begin(); it != enemies.end();)
-    {
-      if (*it && !(*it)->isAlive())
-      {
-        auto pos = (*it)->getPosition();
-        if (!(*it)->hasReachedEnd())
-        {
-          std::cout << "\033[33m[DEBUG] Enemy at (" << pos.first << ", " << pos.second << ") killed! +5 coins\033[0m\n";
-          player.addCoins(5); // Reward for kill
-        }
-        it = enemies.erase(it);
-      }
-      else if (*it && (*it)->isAlive() && (*it)->hasReachedEnd())
-      {
-        auto pos = (*it)->getPosition();
-        std::cout << "\033[31m[DEBUG] Enemy at (" << pos.first << ", " << pos.second << ") reached the castle! You lose a life.\033[0m\n";
-        player.loseLife();
-        it = enemies.erase(it);
-      }
-      else
-      {
-        ++it;
-      }
-    }
-
-    // Debug: print active enemies
-    std::cout << "[DEBUG] Enemies: ";
-    if (enemies.empty())
-    {
-      std::cout << "None";
+      m_player->loseLife();
+      it = enemies.erase(it);
     }
     else
-    {
-      for (const auto &enemyPtr : enemies)
-      {
-        if (enemyPtr)
-        {
-          auto pos = enemyPtr->getPosition();
-          std::cout << "(x=" << pos.first << ", y=" << pos.second << ", hp=" << enemyPtr->getHealth() << ") ";
-        }
-      }
-    }
-    std::cout << "\n";
+      ++it;
   }
-
-  std::cout << "Player: " << manager.getPlayerName() << " | Coins: " << player.getCoins() << " | Lives: " << player.getLives() << "\n";
-  std::cout << "Current Wave: " << waveManager.getCurrentWave() << "\n";
-
   // Check for defeat
-  if (player.getLives() <= 0)
+  if (m_player->getLives() <= 0)
   {
-    std::cout << "You lost all your lives!\n";
     manager.setState(std::make_unique<GameOverState>());
     return;
   }
   // Check for victory
   if (!waveManager.hasNextWave() && !waveManager.isWaveActive() && waveManager.getActiveEnemies().empty())
   {
-    std::cout << "All waves cleared!\n";
     manager.setState(std::make_unique<VictoryState>());
     return;
   }
+}
 
-  // If a wave just finished, offer upgrade/sell menu
-  if (!waveManager.isWaveActive() && waveManager.hasNextWave())
-  {
-    std::cout << "\n--- Wave Complete! ---\n";
-    handleUpgradeOrSell(manager, true);
-    // Start the next wave after upgrade/sell
-    waveManager.startNextWave();
-    // Print wave info
-    int waveNum = waveManager.getCurrentWave();
-    int enemiesThisWave = level.getWaveManager().getBaseEnemiesPerWave() + waveNum;
-    std::cout << "\n--- Wave " << waveNum << " begins! Enemies this wave: " << enemiesThisWave << " ---\n";
-  }
+void PlayingState::handleEvent(const sf::Event &event, sf::RenderWindow &window, GameManager &manager)
+{
+  m_placementController->handleEvent(event, window);
+}
+
+void PlayingState::draw(sf::RenderWindow &window)
+{
+  m_gameView->render(window, *m_level);
+  m_gameView->renderProjectiles(window, m_activeProjectiles);
+  m_placementController->draw(window);
+  m_hudView->render(window, *m_player, *m_level);
 }
 
 void PlayingState::handleInput(GameManager &manager)

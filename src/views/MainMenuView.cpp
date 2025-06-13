@@ -81,8 +81,10 @@ MainMenuView::MainMenuView(unsigned int width, unsigned int height)
 
 void MainMenuView::draw(sf::RenderWindow &window)
 {
+  std::cout << "[DEBUG] draw called, mode=" << static_cast<int>(m_mode) << ", m_showNameInput=" << m_showNameInput << std::endl;
   if (m_mode == MenuMode::LevelSelect)
   {
+    std::cout << "[DEBUG] drawLevelSelection will be called" << std::endl;
     drawLevelSelection(window);
     return;
   }
@@ -133,6 +135,7 @@ void MainMenuView::draw(sf::RenderWindow &window)
   // Draw name entry popup if active
   if (m_showNameInput)
   {
+    std::cout << "[DEBUG] Drawing name input popup" << std::endl;
     sf::RectangleShape popup(sf::Vector2f(400, 160));
     popup.setFillColor(sf::Color(255, 255, 255, 240));
     popup.setOutlineColor(sf::Color(69, 123, 157));
@@ -192,6 +195,7 @@ void MainMenuView::setLevelNames(const std::vector<std::string> &names)
 void MainMenuView::setMode(MenuMode mode)
 {
   m_mode = mode;
+  std::cout << "[DEBUG] setMode called, new mode=" << static_cast<int>(mode) << std::endl;
 }
 
 MainMenuView::MenuMode MainMenuView::getMode() const
@@ -224,6 +228,7 @@ bool MainMenuView::isQuitClicked(const sf::Vector2i &mousePos) const
 void MainMenuView::showNameInput(bool show)
 {
   m_showNameInput = show;
+  std::cout << "[DEBUG] showNameInput called with show=" << show << ", m_showNameInput now=" << m_showNameInput << std::endl;
   if (show)
     m_playerName.clear();
 }

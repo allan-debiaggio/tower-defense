@@ -57,15 +57,46 @@ void MainMenuState::handleEvent(const sf::Event &event, sf::RenderWindow &window
     m_menuView.handleTextInput(event);
     if (const auto *textEvent = event.getIf<sf::Event::TextEntered>())
     {
+      std::cout << "[DEBUG] TextEntered event: unicode=" << textEvent->unicode << ", char='" << static_cast<char>(textEvent->unicode) << "'" << std::endl;
       if (textEvent->unicode == 13)
       {
         std::string name = m_menuView.getPlayerName();
+        std::cout << "[DEBUG] Enter pressed, name='" << name << "'" << std::endl;
         m_menuView.showNameInput(false);
         m_waitingForName = false;
-        std::cout << "[DEBUG] Enter pressed in name entry, name=" << name << std::endl;
-        // Transition to next step (e.g., level select or gameplay)
-        // m_mode = MenuMode::LevelSelect; // or appropriate next mode
-        // ...
+        if (!name.empty())
+        {
+          std::cout << "[DEBUG] Name is not empty, calling switchMode(LevelSelect)" << std::endl;
+          manager.setPlayerName(name);
+          switchMode(MenuMode::LevelSelect);
+          std::cout << "[DEBUG] Switched to LevelSelect mode after name entry" << std::endl;
+        }
+        else
+        {
+          std::cout << "[DEBUG] Name is empty, popup remains open" << std::endl;
+        }
+      }
+    }
+    // --- Handle Enter/Return in KeyPressed events for macOS and cross-platform reliability ---
+    if (const auto *keyEvent = event.getIf<sf::Event::KeyPressed>())
+    {
+      if (keyEvent->scancode == sf::Keyboard::Scancode::Enter)
+      {
+        std::string name = m_menuView.getPlayerName();
+        std::cout << "[DEBUG] KeyPressed Enter (SFML3), name='" << name << "'" << std::endl;
+        m_menuView.showNameInput(false);
+        m_waitingForName = false;
+        if (!name.empty())
+        {
+          std::cout << "[DEBUG] Name is not empty, calling switchMode(LevelSelect) (KeyPressed, SFML3)" << std::endl;
+          manager.setPlayerName(name);
+          switchMode(MenuMode::LevelSelect);
+          std::cout << "[DEBUG] Switched to LevelSelect mode after name entry (KeyPressed, SFML3)" << std::endl;
+        }
+        else
+        {
+          std::cout << "[DEBUG] Name is empty, popup remains open (KeyPressed, SFML3)" << std::endl;
+        }
       }
     }
     return;
@@ -109,6 +140,8 @@ void MainMenuState::handleLevelSelected(GameManager &manager, int levelIdx)
 {
   m_selectedLevel = levelIdx;
   manager.setCurrentLevelIndex(levelIdx);
+  // Reset player for new game/level
+  manager.resetPlayer();
   // Transition to PlayingState
   manager.setState(std::make_unique<PlayingState>(m_windowWidth, m_windowHeight));
 }
@@ -120,6 +153,7 @@ void MainMenuState::draw(sf::RenderWindow &window)
 
 void MainMenuState::switchMode(MenuMode mode)
 {
+  std::cout << "[DEBUG] MainMenuState::switchMode called, mode=" << static_cast<int>(mode) << std::endl;
   m_mode = mode;
   switch (mode)
   {
