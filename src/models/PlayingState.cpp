@@ -144,10 +144,22 @@ void PlayingState::update(GameManager &manager, float dt)
         {
           struct ProjectileHack : Projectile
           {
+            using Projectile::hit_;
             using Projectile::target_;
           };
-          static_cast<ProjectileHack *>(proj.get())->target_ = nullptr;
+          auto *hack = static_cast<ProjectileHack *>(proj.get());
+          hack->target_ = nullptr;
+          hack->hit_ = true; // Mark for removal
+          std::cout << "[DEBUG] Nullified projectile target for erased enemy" << std::endl;
         }
+      // Immediately remove all projectiles with null target
+      for (auto pit = m_activeProjectiles.begin(); pit != m_activeProjectiles.end();)
+      {
+        if (!(*pit) || (*pit)->getTarget() == nullptr)
+          pit = m_activeProjectiles.erase(pit);
+        else
+          ++pit;
+      }
       it = enemies.erase(it);
     }
     else if (*it && (*it)->isAlive() && (*it)->hasReachedEnd())
@@ -161,18 +173,19 @@ void PlayingState::update(GameManager &manager, float dt)
   // Auto-start next wave if previous wave finished and more waves remain
   if (!waveManager.isWaveActive() && waveManager.hasNextWave() && waveManager.getActiveEnemies().empty())
   {
+    std::cout << "[DEBUG] Starting next wave: " << (waveManager.getCurrentWave() + 1) << " of " << waveManager.getNumWaves() << std::endl;
     waveManager.startNextWave();
   }
   // Check for defeat
   if (m_player->getLives() <= 0)
   {
-    manager.setState(std::make_unique<GameOverState>());
+    manager.setState(std::make_unique<GameOverState>(m_windowWidth, m_windowHeight));
     return;
   }
   // Check for victory
   if (!waveManager.hasNextWave() && !waveManager.isWaveActive() && waveManager.getActiveEnemies().empty())
   {
-    manager.setState(std::make_unique<VictoryState>());
+    manager.setState(std::make_unique<VictoryState>(m_windowWidth, m_windowHeight, VictoryState::Mode::NextLevel));
     return;
   }
 }
@@ -201,7 +214,7 @@ void PlayingState::handleInput(GameManager &manager)
   }
   else if (input == "q")
   {
-    manager.setState(std::make_unique<GameOverState>());
+    manager.setState(std::make_unique<GameOverState>(m_windowWidth, m_windowHeight));
   }
   else if (input == "u" || input == "s")
   {

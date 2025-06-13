@@ -1,54 +1,63 @@
 #include "GameOverState.h"
 #include "GameManager.h"
 #include "MainMenuState.h"
+#include "PlayingState.h"
 #include <iostream>
 #include <memory>
 
-GameOverState::GameOverState() noexcept = default;
+GameOverState::GameOverState(unsigned int windowWidth, unsigned int windowHeight)
+    : m_windowWidth(windowWidth), m_windowHeight(windowHeight)
+{
+  m_view = std::make_unique<GameOverView>(windowWidth, windowHeight);
+}
 
 void GameOverState::enter(GameManager &manager)
 {
-  std::cout << "[STATE] Entering GameOverState\n";
-  std::cout << "Game Over!\n";
-  std::cout << "1. Replay\n2. Quit to Main Menu\n";
+  // No-op for SFML
 }
 
 void GameOverState::update(GameManager &manager, float dt)
 {
-  // No-op
+  // No-op for SFML
+}
+
+void GameOverState::draw(sf::RenderWindow &window)
+{
+  if (m_view)
+    m_view->draw(window);
+}
+
+void GameOverState::handleEvent(const sf::Event &event, sf::RenderWindow &window, GameManager &manager)
+{
+  if (event.is<sf::Event::MouseButtonPressed>())
+  {
+    const auto *mouseEvent = event.getIf<sf::Event::MouseButtonPressed>();
+    if (mouseEvent)
+    {
+      sf::Vector2i pos(mouseEvent->position.x, mouseEvent->position.y);
+      if (m_view->isReturnToMenuClicked(pos))
+      {
+        manager.setState(std::make_unique<MainMenuState>(m_windowWidth, m_windowHeight));
+      }
+      else if (m_view->isQuitClicked(pos))
+      {
+        window.close();
+      }
+    }
+  }
 }
 
 void GameOverState::onGameOverOptionSelected(GameManager &manager, int option, unsigned int windowWidth, unsigned int windowHeight)
 {
-  if (option == 1)
-  {
-    // For SFML, go to main menu for new game/level selection
-    manager.setState(std::make_unique<MainMenuState>(windowWidth, windowHeight));
-  }
-  else if (option == 2)
-  {
-    manager.setState(std::make_unique<MainMenuState>(windowWidth, windowHeight));
-  }
-  else
-  {
-    std::cout << "Invalid choice.\n";
-  }
+  // Not used in SFML
 }
 
 void GameOverState::handleInput(GameManager &manager)
 {
-  int choice = 0;
-  while (choice != 1 && choice != 2)
-  {
-    std::cout << "Select option: ";
-    std::cin >> choice;
-    onGameOverOptionSelected(manager, choice, 800, 600);
-  }
+  // Not used in SFML
 }
 
 void GameOverState::exit(GameManager &manager)
 {
-  std::cout << "[STATE] Exiting GameOverState\n";
+  // No-op for SFML
 }
-
-void GameOverState::handleEvent(const sf::Event &event, sf::RenderWindow &window, GameManager &manager) {}

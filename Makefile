@@ -30,8 +30,10 @@ SFML_SOURCES = main_sfml.cpp \
   src/views/EnemyView.cpp \
   src/views/TowerView.cpp \
   src/views/HUDView.cpp \
-  src/controllers/TowerPlacementController.cpp \
   src/views/MainMenuView.cpp \
+  src/views/VictoryView.cpp \
+  src/views/GameOverView.cpp \
+  src/controllers/TowerPlacementController.cpp \
   src/models/GameManager.cpp \
   src/models/MainMenuState.cpp \
   src/models/PlayingState.cpp \

@@ -20,11 +20,11 @@ void WaveManager::startNextWave()
 {
   if (!hasNextWave())
     return;
+  ++currentWave_;
   activeEnemies_.clear();
   spawnedThisWave_ = 0;
   spawnTimer_ = 0.0f;
   waveActive_ = true;
-  ++currentWave_;
   std::cout << "[DEBUG] startNextWave: currentWave_=" << currentWave_ << " numWaves_=" << numWaves_ << std::endl;
 }
 
@@ -53,7 +53,7 @@ void WaveManager::update(float dt)
   if (!waveActive_)
     return;
   spawnTimer_ += dt;
-  int enemiesPerWave = baseEnemiesPerWave_ + currentWave_; // Increase with level
+  int enemiesPerWave = baseEnemiesPerWave_ + currentWave_ - 1;
   while (spawnedThisWave_ < enemiesPerWave && spawnTimer_ >= spawnInterval_)
   {
     size_t pathIndex = pathDist_(rng_);
@@ -70,7 +70,6 @@ void WaveManager::update(float dt)
     ++spawnedThisWave_;
     spawnTimer_ -= spawnInterval_;
   }
-  // End wave if all enemies spawned and all are gone
   if (spawnedThisWave_ >= enemiesPerWave && activeEnemies_.empty())
   {
     waveActive_ = false;
@@ -80,4 +79,13 @@ void WaveManager::update(float dt)
 size_t WaveManager::getNumPaths() const
 {
   return paths_.size();
+}
+
+void WaveManager::reset()
+{
+  currentWave_ = 0;
+  waveActive_ = false;
+  activeEnemies_.clear();
+  spawnedThisWave_ = 0;
+  spawnTimer_ = 0.0f;
 }

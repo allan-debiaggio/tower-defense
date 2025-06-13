@@ -21,11 +21,13 @@ public:
   size_t getNumPaths() const;
   void setEnemyFactories(const std::vector<EnemyFactory> &enemyFactories);
   int getBaseEnemiesPerWave() const { return baseEnemiesPerWave_; }
+  void reset();
+  int getNumWaves() const { return numWaves_; }
 
 private:
   int numWaves_;
   int baseEnemiesPerWave_;
-  int currentWave_;
+  int currentWave_; // 1-based, incremented before each wave starts
   bool waveActive_;
   std::vector<std::unique_ptr<Enemy>> activeEnemies_;
   const std::vector<Path> &paths_;

@@ -140,6 +140,7 @@ void MainMenuState::handleLevelSelected(GameManager &manager, int levelIdx)
 {
   m_selectedLevel = levelIdx;
   manager.setCurrentLevelIndex(levelIdx);
+  manager.resetCurrentLevel();
   // Reset player for new game/level
   manager.resetPlayer();
   // Transition to PlayingState
