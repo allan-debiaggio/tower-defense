@@ -1,0 +1,402 @@
+body {
+  background: url('https://wallpapers.com/images/hd/super-mario-bros-wonder-mushroom-kingdom-4k-4v7w7w7w7w7w7w7w.jpg') center/cover no-repeat fixed, linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  font-family: 'Press Start 2P', cursive;
+  margin: 0;
+  min-height: 100vh;
+  color: #222;
+  position: relative;
+}
+
+.bg-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.7);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 251, 230, 0.97);
+  border: 8px solid #ffb347;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  max-width: 1100px;
+  margin: 120px auto 40px auto;
+  padding: 120px 24px 24px 24px;
+  background-image: url('assets/mario_tower.png');
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.characters-large-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 180px 0 40px 0;
+  max-width: 1100px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+}
+
+.character-col {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.left-col {
+  align-items: flex-start;
+  margin-left: -20px;
+}
+
+.right-col {
+  align-items: flex-end;
+  margin-right: -20px;
+}
+
+.mario-large {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.goomba-large {
+  margin-left: 40px;
+  margin-right: 0px;
+}
+
+.peach-large {
+  margin-left: 80px;
+  margin-top: 30px;
+}
+
+.bowser-large {
+  margin-left: auto;
+  margin-right: 0;
+  align-self: flex-start;
+}
+
+.character-large {
+  max-width: 260px;
+  max-height: 340px;
+  width: auto;
+  height: 340px;
+  object-fit: contain;
+  background: #ffe066cc;
+  border: 4px solid #457b9d;
+  border-radius: 24px;
+  box-shadow: 0 4px 32px #457b9d44;
+  transition: transform 0.3s, box-shadow 0.3s, filter 0.3s;
+  cursor: pointer;
+}
+
+.character-large:hover {
+  transform: scale(1.08) rotate(-3deg);
+  box-shadow: 0 12px 32px #e6394680, 0 0 32px #fff176;
+  filter: brightness(1.1) drop-shadow(0 0 16px #fff176);
+  z-index: 2;
+}
+
+.main-title {
+  text-align: center;
+  font-size: 3rem;
+  color: #e63946;
+  font-family: 'Press Start 2P', cursive;
+  letter-spacing: 3px;
+  margin: 0 0 40px 0;
+  text-shadow: 6px 6px 0 #222, 0 0 24px #fff176;
+  position: relative;
+  z-index: 2;
+}
+
+.footer {
+  text-align: center;
+  margin-top: 32px;
+  font-size: 1.1rem;
+  color: #457b9d;
+  text-shadow: 1px 1px 0 #fff;
+  letter-spacing: 1px;
+}
+
+.sprite-note {
+  text-align: center;
+  margin: 18px 0 0 0;
+  font-size: 1rem;
+  color: #fffbe6;
+  background: #e63946;
+  border: 2px dashed #fff176;
+  border-radius: 10px;
+  padding: 10px 18px;
+  box-shadow: 2px 2px 0 #222;
+  font-family: 'Press Start 2P', cursive;
+  letter-spacing: 1px;
+  display: inline-block;
+}
+
+/* Side arrows */
+.side-arrow {
+  position: fixed;
+  top: 50%;
+  width: 80px;
+  height: 80px;
+  transform: translateY(-50%);
+  z-index: 10;
+  cursor: pointer;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 4px 0 #222) drop-shadow(0 0 8px #fff176);
+  transition: transform 0.2s, filter 0.2s;
+}
+
+.left-arrow {
+  left: 32px;
+}
+
+.right-arrow {
+  right: 32px;
+}
+
+.side-arrow:hover {
+  transform: translateY(-50%) scale(1.18) rotate(-8deg);
+  filter: drop-shadow(0 8px 0 #e63946) drop-shadow(0 0 24px #fff176) brightness(1.2);
+}
+
+@media (max-width: 1200px) {
+  .characters-large-row {
+    margin-top: 100px;
+    max-width: 900px;
+  }
+
+  .character-large {
+    max-width: 180px;
+    height: 180px;
+  }
+
+  .character-col {
+    gap: 24px;
+  }
+
+  .left-col {
+    margin-left: -8px;
+  }
+
+  .right-col {
+    margin-right: -8px;
+  }
+}
+
+@media (max-width: 700px) {
+  .container {
+    margin: 80px 2px 20px 2px;
+    padding: 10px 2px 16px 2px;
+  }
+
+  .main-title {
+    font-size: 1.3rem;
+    margin: 0 0 18px 0;
+  }
+
+  .characters-large-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin: 20px 0 10px 0;
+  }
+
+  .character-col {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .character-large {
+    max-width: 90px;
+    height: 90px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+  }
+
+  .peach-large {
+    margin-top: 0;
+  }
+
+  .side-arrow {
+    width: 40px;
+    height: 40px;
+    left: 8px;
+    right: 8px;
+  }
+}
+
+/* Remove .banner-bg and .banner-img styles */
+.banner-bg,
+.banner-img {
+  display: none !important;
+}
+
+.slide {
+  display: none;
+}
+
+.slide-main {
+  display: block;
+}
+
+.slide-feature {
+  display: none;
+}
+
+.feature-slide-layout {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 48px;
+  margin: 80px 0 40px 0;
+}
+
+.feature-bowser-img-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  margin-right: 32px;
+}
+
+.feature-bowser-img {
+  max-width: 340px;
+  max-height: 480px;
+  width: 340px;
+  height: auto;
+  object-fit: contain;
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  margin: 0;
+}
+
+.feature-cards-col {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  min-width: 380px;
+  max-width: 600px;
+  flex: 1 1 0;
+  justify-content: flex-start;
+}
+
+.feature-card.large-card {
+  min-width: 340px;
+  max-width: 100%;
+  height: 260px;
+  font-size: 1.05rem;
+  overflow: hidden;
+  background: #fffbe6;
+  border: 3px solid #e63946;
+  border-radius: 18px;
+  box-shadow: 0 4px 16px #457b9d44;
+  padding: 18px 18px 12px 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.code-scroll,
+.explanation-scroll {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  max-height: 180px;
+  font-size: 0.95rem;
+  color: #222;
+}
+
+@media (max-width: 1200px) {
+  .feature-slide-layout {
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .feature-bowser-img-col {
+    margin-right: 0;
+    margin-bottom: 18px;
+  }
+
+  .feature-bowser-img {
+    width: 220px;
+    max-width: 220px;
+  }
+
+  .feature-cards-col {
+    min-width: 180px;
+    max-width: 100%;
+    gap: 18px;
+    width: 100%;
+    align-items: center;
+  }
+
+  .feature-card.large-card {
+    min-width: 180px;
+    max-width: 100%;
+    height: 120px;
+    font-size: 0.85rem;
+  }
+
+  .code-scroll,
+  .explanation-scroll {
+    max-height: 60px;
+  }
+}
+
+.mario-flag-img {
+  display: block;
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 320px;
+  max-width: 90vw;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.slide-feature .mario-flag-img {
+  display: none !important;
+}
+
+.feature-slide-layout,
+.feature-card,
+.feature-cards {
+  z-index: 3;
+}
+
+.feature-card.code-card.large-card {
+  min-height: 440px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.feature-card.code-card.large-card img {
+  display: block;
+  max-width: 100%;
+  max-height: 340px;
+  width: auto;
+  height: auto;
+  border: 2px solid #e07a5f;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin: 0 auto;
+}

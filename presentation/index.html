@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Super Mario Tower Defense Game</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Google Fonts: Press Start 2P for retro pixel font -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="bg-overlay"></div>
+  <div class="container">
+    <!-- Slide 1: Main -->
+    <div class="slide slide-main">
+      <h1 class="main-title">Super Mario Tower Defense</h1>
+      <div class="characters-large-row">
+        <div class="character-col left-col">
+          <img src="assets/mario.png" alt="Mario" class="character-large mario-large">
+          <img src="assets/goomba.png" alt="Goomba" class="character-large goomba-large">
+        </div>
+        <div class="character-col right-col">
+          <img src="assets/peach.png" alt="Peach" class="character-large peach-large">
+          <img src="assets/bowser1.png" alt="Bowser" class="character-large bowser-large">
+        </div>
+      </div>
+    </div>
+    <!-- Slide 2: Architecture MVC -->
+    <div class="slide slide-feature" style="display:none;">
+      <h1 class="main-title">Architecture MVC</h1>
+      <div class="feature-slide-layout">
+        <div class="feature-bowser-img-col">
+          <img src="assets/bowser3.png" alt="Bowser" class="feature-bowser-img">
+        </div>
+        <div class="feature-cards-col">
+          <div class="feature-card code-card large-card">
+            <div class="card-title">Structure du projet</div>
+            <pre class="code-scroll"><code>.
+├── Makefile
+├── main.cpp
+├── main_sfml.cpp
+├── src/
+│   ├── models/
+│   │   ├── GameManager.*
+│   │   ├── LevelManager.*
+│   │   ├── Player.*
+│   │   ├── Tower.*
+│   │   ├── Enemy.*
+│   │   └── ...
+│   ├── views/
+│   │   ├── GameView.*
+│   │   ├── LevelView.*
+│   │   ├── TowerView.*
+│   │   ├── EnemyView.*
+│   │   ├── MainMenuView.*
+│   │   └── ...
+│   ├── controllers/
+│   │   └── TowerPlacementController.*
+├── presentation/
+│   ├── index.html
+│   ├── style.css
+│   ├── script.js
+│   └── assets/
+└── ...
+</code></pre>
+          </div>
+          <div class="feature-card explanation-card large-card">
+            <div class="card-title">Architecture MVC</div>
+            <div class="explanation-scroll">
+              <ul style="list-style-type: disc; padding-left: 1.5em;">
+                <li style="margin-bottom: 0.7em;"><b>Modèle (Model)</b> : Gère la logique du jeu, l'état des niveaux,
+                  des ennemis, des tours, du
+                  joueur, etc. (ex: <code>LevelManager</code>, <code>GameManager</code>, <code>Player</code>,
+                  <code>Tower</code>, <code>Enemy</code>).
+                </li>
+                <li style="margin-bottom: 0.7em;"><b>Vue (View)</b> : Affiche l'état du jeu à l'utilisateur via SFML.
+                  Chaque vue (ex:
+                  <code>GameView</code>, <code>LevelView</code>, <code>TowerView</code>, <code>EnemyView</code>,
+                  <code>MainMenuView</code>) se concentre sur le rendu d'un aspect du jeu.
+                </li>
+                <li><b>Contrôleur (Controller)</b> : Interprète les entrées utilisateur et modifie le modèle en
+                  conséquence (ex: <code>TowerPlacementController</code> gère le placement, l'amélioration et la vente
+                  des tours).</li>
+                <li><b>Séparation claire</b> : Les vues n'accèdent jamais directement aux données du modèle, mais
+                  reçoivent des objets modèles à afficher. Les contrôleurs manipulent le modèle et déclenchent des mises
+                  à jour de la vue.</li>
+                <li><b>Extensible</b> : Ajouter de nouveaux types de tours, ennemis ou vues est facilité par cette
+                  architecture modulaire.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Slide 3: Architecture MVC - Tower Placement -->
+    <div class="slide slide-state" style="display:none;">
+      <h1 class="main-title">Architecture MVC</h1>
+      <div class="feature-slide-layout">
+        <div class="feature-bowser-img-col">
+          <img src="assets/bowser2.png" alt="Bowser" class="feature-bowser-img">
+        </div>
+        <div class="feature-cards-col">
+          <div class="feature-card code-card large-card"
+            style="min-height: 180px; display: flex; justify-content: center; align-items: center;">
+            <a href="assets/mvc_tower_placement.svg" target="_blank" rel="noopener" style="text-decoration: none;">
+              <div
+                style="width: 90%; height: 140px; display: flex; justify-content: center; align-items: center; background: #f3f3f3; border: 2px dashed #e07a5f; border-radius: 12px; font-size: 2rem; color: #e07a5f; font-family: 'Press Start 2P', monospace; cursor: pointer; text-align: center;">
+                Cliquez pour voir le diagramme
+              </div>
+            </a>
+          </div>
+          <div class="feature-card explanation-card large-card">
+            <div class="card-title">Explication du fonctionnement</div>
+            <div class="explanation-scroll">
+              <ul>
+                <li style="margin-bottom: 0.7em;">L'utilisateur clique sur une case de la grille pour placer une tour.
+                </li>
+                <li style="margin-bottom: 0.7em;">Le <b>contrôleur</b> (<code>TowerPlacementController</code>)
+                  intercepte l'événement et vérifie la
+                  validité de l'action (case constructible, ressources du joueur, etc.).</li>
+                <li style="margin-bottom: 0.7em;">Si le placement est possible, le contrôleur modifie le <b>modèle</b>
+                  (<code>LevelManager</code>,
+                  <code>Player</code>, <code>Tower</code>), en ajoutant la tour et en mettant à jour les ressources du
+                  joueur.
+                </li>
+                <li style="margin-bottom: 0.7em;">Le <b>modèle</b> notifie la <b>vue</b> (<code>GameView</code> et ses
+                  sous-vues) qui se met à jour
+                  pour afficher la nouvelle tour sur la grille.</li>
+                <li style="margin-bottom: 0.7em;">La séparation des responsabilités garantit que la logique métier,
+                  l'affichage et la gestion des
+                  entrées restent indépendants et facilement maintenables.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Slide 4: UML Diagram -->
+    <div class="slide slide-uml" style="display:none;">
+      <h1 class="main-title">Diagramme UML des classes</h1>
+      <div class="feature-slide-layout">
+        <div class="feature-bowser-img-col">
+          <img src="assets/mario_bros.png" alt="Mario Bros" class="feature-bowser-img">
+        </div>
+        <div class="feature-cards-col" style="width: 100%;">
+          <div class="feature-card code-card large-card"
+            style="min-height: 180px; display: flex; justify-content: center; align-items: center;">
+            <a href="assets/uml_tower_defense.svg" target="_blank" rel="noopener" style="text-decoration: none;">
+              <div
+                style="width: 90%; height: 140px; display: flex; justify-content: center; align-items: center; background: #f3f3f3; border: 2px dashed #e07a5f; border-radius: 12px; font-size: 2rem; color: #e07a5f; font-family: 'Press Start 2P', monospace; cursor: pointer; text-align: center;">
+                Cliquez pour voir le diagramme
+              </div>
+            </a>
+          </div>
+          <div class="feature-card explanation-card large-card">
+            <div class="card-title">Explication du diagramme UML</div>
+            <div class="explanation-scroll">
+              <ul>
+                <li style="margin-bottom: 0.7em;"><b>GameManager</b> gère les niveaux, le joueur et l'état courant du
+                  jeu (pattern State).</li>
+                <li style="margin-bottom: 0.7em;"><b>LevelManager</b> gère les tours, les chemins, et les vagues
+                  d'ennemis pour chaque niveau.</li>
+                <li style="margin-bottom: 0.7em;"><b>WaveManager</b> utilise <b>EnemyFactory</b> (pattern Factory) pour
+                  créer dynamiquement les
+                  ennemis.</li>
+                <li style="margin-bottom: 0.7em;"><b>GameState</b> et ses sous-classes (<code>MainMenuState</code>,
+                  <code>PlayingState</code>, etc.)
+                  implémentent les différents états du jeu (pattern State).</li>
+                <li style="margin-bottom: 0.7em;"><b>Tower</b> et <b>Enemy</b> sont des classes de base, avec des
+                  sous-classes spécialisées pour
+                  chaque type.</li>
+                <li style="margin-bottom: 0.7em;">Les <b>vues</b> (GameView, LevelView, etc.) affichent l'état du jeu à
+                  l'utilisateur.</li>
+                <li style="margin-bottom: 0.7em;"><b>TowerPlacementController</b> gère l'interaction utilisateur pour le
+                  placement des tours.</li>
+                <li style="margin-bottom: 0.7em;">Les relations principales (composition, héritage, utilisation) sont
+                  représentées par les flèches et
+                  les liens entre les classes.</li>
+                <li style="margin-bottom: 0.7em;">Les patterns <b>Factory</b> et <b>State</b> sont explicitement annotés
+                  sur le diagramme.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Slide 5: Design Patterns -->
+    <div class="slide slide-patterns" style="display:none;">
+      <h1 class="main-title">Design Patterns</h1>
+      <div class="feature-slide-layout">
+        <div class="feature-bowser-img-col">
+          <img src="assets/mario_bros.png" alt="Mario Bros" class="feature-bowser-img">
+        </div>
+        <div class="feature-cards-col">
+          <div class="feature-card code-card large-card"
+            style="min-height: 120px; display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch;">
+            <div class="card-title">State et Design Patterns</div>
+            <pre class="code-scroll"
+              style="overflow-x: auto; white-space: pre; font-size: 0.95rem; margin: 0; padding: 0.5em 0.5em 0.5em 0.5em; background: #f3f3f3; border-radius: 8px;">
+<code>// --- State Pattern ---
+// src/models/GameState.h
+class GameState {
+public:
+  virtual ~GameState() = default;
+  virtual void enter(GameManager &manager) {}
+  virtual void update(GameManager &manager, float dt) = 0;
+  virtual void handleInput(GameManager &manager) {}
+  virtual void exit(GameManager &manager) {}
+};
+
+class MainMenuState : public GameState { /* ... */ };
+class PlayingState : public GameState { /* ... */ };
+// ... autres états ...
+
+// Utilisation :
+// GameManager possède un pointeur vers GameState et change d'état dynamiquement.
+
+// --- Factory Pattern ---
+// src/models/WaveManager.h
+using EnemyFactory = std::function<std::unique_ptr<Enemy>(const Path&)>;
+
+class WaveManager {
+  std::vector<EnemyFactory> enemyFactories_;
+  void setEnemyFactories(const std::vector<EnemyFactory>& factories);
+  // ...
+};
+
+// Utilisation :
+// WaveManager utilise EnemyFactory pour créer dynamiquement des ennemis lors des vagues.
+</code></pre>
+          </div>
+          <div class="feature-card explanation-card large-card">
+            <div class="card-title">Explication des patterns</div>
+            <div class="explanation-scroll">
+              <ul>
+                <li style="margin-bottom: 0.7em;"><b>State Pattern :</b> Permet de gérer les différents états du jeu
+                  (menu, jeu, pause, victoire,
+                  etc.) via une hiérarchie de classes dérivées de <code>GameState</code>. <code>GameManager</code>
+                  délègue le comportement courant à l'état actif, ce qui rend le code plus modulaire et extensible.</li>
+                <li style="margin-bottom: 0.7em;"><b>Factory Pattern :</b> Permet la création flexible d'ennemis via des
+                  fonctions ou objets usines
+                  (<code>EnemyFactory</code>). <code>WaveManager</code> utilise ces factories pour instancier
+                  dynamiquement différents types d'ennemis selon la vague, facilitant l'ajout de nouveaux types sans
+                  modifier le code existant.</li>
+                <li style="margin-bottom: 0.7em;">Ces patterns favorisent la séparation des responsabilités, la
+                  réutilisabilité et l'extensibilité du
+                  code.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Slide 6: Difficultés rencontrées -->
+    <div class="slide slide-difficultes" style="display:none;">
+      <h1 class="main-title">Difficultés rencontrées</h1>
+      <div class="feature-slide-layout">
+        <div class="feature-bowser-img-col">
+          <img src="assets/bowser1.png" alt="Bowser" class="feature-bowser-img">
+        </div>
+        <div class="feature-cards-col">
+          <div class="feature-card code-card large-card"
+            style="min-height: 120px; display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch;">
+            <div class="card-title">Extraits de code</div>
+            <pre class="code-scroll"
+              style="overflow-x: auto; white-space: pre; font-size: 0.95rem; margin: 0; padding: 0.5em 0.5em 0.5em 0.5em; background: #f3f3f3; border-radius: 8px;">
+<code>// --- Passage des états texte vers UI ---
+// Ancien :
+if (state == "playing") {
+  // logique du jeu en texte
+}
+// Nouveau :
+class PlayingState : public GameState {
+  void update(GameManager &manager, float dt) override { /* ... */ }
+  void draw(sf::RenderWindow &window) override { /* ... */ }
+};
+
+// --- Migration SFML 2.6 -> 3.0 ---
+// Ancien (2.6) :
+window.draw(sprite);
+// Nouveau (3.0) :
+window.draw(sprite, states);
+// Gestion des événements :
+// sf::Event::Closed -> sf::Event::WindowClosed
+
+// --- Gestion des projectiles ---
+if (enemy->isAlive()) {
+  projectile->setTarget(enemy);
+} else {
+  // On n'assigne pas la cible, le projectile est ignoré ou supprimé lors de la prochaine mise à jour
+  projectile->markForRemoval();
+}
+</code></pre>
+          </div>
+          <div class="feature-card explanation-card large-card">
+            <div class="card-title">Explications</div>
+            <div class="explanation-scroll">
+              <ul>
+                <li style="margin-bottom: 0.7em;"><b>Intégration des états UI :</b> Le passage d'une version textuelle à
+                  une version graphique a
+                  nécessité la refonte du système d'états. Les états du jeu (menu, jeu, pause, etc.) sont désormais des
+                  classes dérivées de <code>GameState</code> avec des méthodes <code>draw</code> et
+                  <code>handleEvent</code> adaptées à l'UI SFML.
+                </li>
+                <li style="margin-bottom: 0.7em;"><b>Migration SFML 2.6 → 3.0 :</b> Plusieurs changements d'API (gestion
+                  des événements, signatures de
+                  méthodes <code>draw</code>, etc.) ont nécessité des adaptations dans tout le code, notamment pour la
+                  compatibilité avec les nouveaux types d'événements et les signatures de fonctions.</li>
+                <li style="margin-bottom: 0.7em;"><b>Projectiles et ennemis tués :</b> Initialement, les projectiles
+                  pouvaient viser des ennemis déjà
+                  éliminés, causant des comportements indéfinis. Nous avons ajouté des vérifications
+                  (<code>isAlive()</code>) avant d'assigner ou de mettre à jour la cible d'un projectile, assurant ainsi
+                  la robustesse du système.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Slide 7: Perspectives et améliorations -->
+    <div class="slide slide-perspectives" style="display:none;">
+      <h1 class="main-title">Perspectives et améliorations</h1>
+      <div class="feature-slide-layout">
+        <div class="feature-bowser-img-col">
+          <img src="assets/peach.png" alt="Peach" class="feature-bowser-img">
+        </div>
+        <div class="feature-cards-col" style="width: 100%;">
+          <div class="feature-card explanation-card large-card"
+            style="min-height: 200px; padding: 1.2em 1.2em 1.2em 1.2em;">
+            <div class="card-title" style="margin-bottom: 0.7em; font-size: 1.15em;">Axes d'amélioration</div>
+            <div class="explanation-scroll">
+              <ul style="list-style-type: disc; padding-left: 1.5em;">
+                <li style="margin-bottom: 0.7em;"><b>Compléter l'intégration des assets</b> (sprites, sons, polices)
+                  pour enrichir l'ambiance visuelle et sonore du jeu.</li>
+                <li style="margin-bottom: 0.7em;"><b>Ajouter de nouveaux types de tours et d'ennemis</b> avec des
+                  comportements variés (effets de zone, ralentissement, boss, etc.).</li>
+                <li style="margin-bottom: 0.7em;"><b>Améliorer l'interface utilisateur et les animations</b> pour une
+                  expérience de jeu plus fluide et attractive.</li>
+                <li style="margin-bottom: 0.7em;"><b>Refactoriser le code</b> en séparant clairement les vues et les
+                  contrôleurs, en regroupant les fonctions utilitaires, en simplifiant la gestion des états, en
+                  clarifiant les interfaces entre modules et en documentant les dépendances entre classes.</li>
+                <li style="margin-bottom: 0.7em;"><b>Intégrer d'autres design patterns</b> (Observer, Strategy) pour
+                  enrichir l'architecture,
+                  faciliter l'extension et la maintenance du projet.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <img src="assets/mortar.png" alt="Left" class="side-arrow left-arrow" id="leftArrow">
+    <img src="assets/turtle.png" alt="Right" class="side-arrow right-arrow" id="rightArrow">
+    <div class="footer">&copy; 2025 Super Mario Tower Defense | Retro Presentation</div>
+  </div>
+  <script src="script.js"></script>
+</body>
+
+</html>

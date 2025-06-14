@@ -1,196 +1,157 @@
 @startuml
 ' === Model Layer ===
-class GameModel {
-  - levels: vector<Level>
-  - player: Player
-  - scoreManager: ScoreManager
-  - resourceManager: ResourceManager
-  - currentLevel: Level*
-  + startGame()
-  + update(dt: float)
-  + handleEvent(event)
-  + getCurrentLevel(): Level*
+class GameManager {
+  - levels_: vector<LevelManager>
+  - player_: Player
+  - currentState_: GameState
+  - playerName_: string
+  + addLevel()
+  + getCurrentLevel()
+  + setState()
+  + update()
+  + handleInput()
 }
 
-class Level {
-  - enemies: vector<Enemy*>
-  - towers: vector<Tower*>
-  - path: Path
-  - waveManager: WaveManager
-  - state: LevelState
-  + start()
-  + update(dt: float)
-  + spawnWave()
-  + addTower(t: Tower*)
-  + removeTower(t: Tower*)
-}
-
-abstract class Enemy {
-  - health: int
-  - speed: float
-  - position: Vector2f
-  - path: Path*
-  - reward: int
-  + move(dt: float)
-  + takeDamage(dmg: int)
-  + isAlive(): bool
-  + onDeath()
-}
-class GoombaEnemy
-class KoopaEnemy
-
-abstract class Tower {
-  - position: Vector2f
-  - range: float
-  - fireRate: float
-  - level: int
-  - target: Enemy*
-  + attack()
-  + upgrade()
-  + canAttack(e: Enemy*): bool
-}
-class FireFlowerTower
-class KoopaShellTower
-class PSwitchTower
-
-class Projectile {
-  - position: Vector2f
-  - velocity: Vector2f
-  - damage: int
-  - target: Enemy*
-  + update(dt: float)
-  + onHit()
+class LevelManager {
+  - towers_: vector<vector<Tower*>>
+  - paths_: vector<Path>
+  - waveManager_: WaveManager
+  + placeTower()
+  + removeTower()
+  + getWaveManager()
 }
 
 class Player {
-  - coins: int
-  - lives: int
-  + addCoins(amount: int)
-  + spendCoins(amount: int): bool
+  - coins_: int
+  - lives_: int
+  + addCoins()
+  + spendCoins()
   + loseLife()
 }
 
-class Path {
-  - waypoints: vector<Vector2f>
-  + getNextWaypoint()
+class Tower {
+  - position_: pair<float, float>
+  - range_: float
+  - fireRate_: float
+  - level_: int
+  + update()
+  + getLevel()
+  + upgrade()
 }
+class FireFlowerTower extends Tower
+class IceTower extends Tower
 
-class ScoreManager {
-  - score: int
-  - highScores: vector<int>
-  + addScore(points: int)
-  + getHighScores(): vector<int>
+class Enemy {
+  - health_: float
+  - speed_: float
+  - position_: pair<float, float>
+  - path_: Path
+  + update()
+  + takeDamage()
 }
+class GoombaEnemy extends Enemy
+class KoopaEnemy extends Enemy
+class ParagoombaEnemy extends Enemy
+class BowserEnemy extends Enemy
 
-class ResourceManager {
-  - resources: map<string, int>
-  + addResource(name: string, amount: int)
-  + spendResource(name: string, amount: int): bool
+class Projectile {
+  - position_: pair<float, float>
+  - velocity_: pair<float, float>
+  - damage_: float
+  - target_: Enemy*
+  + update()
 }
+class FireballProjectile extends Projectile
+class IceProjectile extends Projectile
 
 class WaveManager {
-  - waves: vector<Wave>
-  - currentWave: int
+  - activeEnemies_: vector<Enemy*>
   + startNextWave()
-  + isWaveActive(): bool
+  + isWaveActive()
+  + setEnemyFactories()
 }
 
-' === Factory & Observer Patterns ===
-class EnemyFactory {
-  + createEnemy(type: string, path: Path*): Enemy*
-}
-class TowerFactory {
-  + createTower(type: string, pos: Vector2f): Tower*
+class Path {
+  - waypoints_: vector<pair<float, float>>
+  + getWaypoint()
 }
 
-interface IObserver {
-  + onNotify(event: GameEvent)
+' === Factory Pattern ===
+class EnemyFactory <<factory>> {
+  + createEnemy(path: Path): Enemy
 }
-class EventDispatcher {
-  - observers: vector<IObserver*>
-  + addObserver(obs: IObserver*)
-  + removeObserver(obs: IObserver*)
-  + notify(event: GameEvent)
+WaveManager --> EnemyFactory : uses
+note right of EnemyFactory
+  <<factory pattern>>\nUsed to create Enemy objects dynamically
+end note
+
+' === State Pattern ===
+abstract class GameState <<state>> {
+  + enter()
+  + update()
+  + handleInput()
+  + exit()
 }
+class MainMenuState extends GameState
+class PlayingState extends GameState
+class PausedState extends GameState
+class GameOverState extends GameState
+class VictoryState extends GameState
+class LevelSelectState extends GameState
+class TowerPlacementState extends GameState
+GameState <|-- MainMenuState
+GameState <|-- PlayingState
+GameState <|-- PausedState
+GameState <|-- GameOverState
+GameState <|-- VictoryState
+GameState <|-- LevelSelectState
+GameState <|-- TowerPlacementState
+GameManager --> GameState : currentState
+note right of GameState
+  <<state pattern>>\nImplements game phases as interchangeable states
+end note
 
 ' === View Layer ===
-class GameView {
-  + render()
-  + drawUI()
-}
-class LevelView {
-  + render()
-}
-class EnemyView {
-  + render(enemy: Enemy*)
-}
-class TowerView {
-  + render(tower: Tower*)
-}
-class ProjectileView {
-  + render(projectile: Projectile*)
-}
-class MenuView {
-  + render()
-}
-class HUDView {
-  + render()
-}
+class GameView
+class LevelView
+class TowerView
+class EnemyView
+class HUDView
+class MainMenuView
+class VictoryView
+class GameOverView
 
 ' === Controller Layer ===
-class GameController {
-  + update(dt: float)
-  + handleInput(event)
-}
-class LevelController {
-  + update(dt: float)
-  + handleTowerPlacement()
-}
-class EnemyController {
-  + update(dt: float)
-}
-class TowerController {
-  + update(dt: float)
-}
-class InputController {
-  + processInput(event)
-}
+class TowerPlacementController
 
 ' === Relationships ===
-GameModel "1" o-- "1..*" Level
-GameModel "1" o-- "1" Player
-GameModel "1" o-- "1" ScoreManager
-GameModel "1" o-- "1" ResourceManager
-GameModel "1" o-- "1" Level : currentLevel
+GameManager "1" o-- "*" LevelManager
+GameManager "1" o-- "1" Player
+GameManager "1" o-- "1" GameState : currentState
+LevelManager "1" o-- "*" Tower
+LevelManager "1" o-- "*" Path
+LevelManager "1" o-- "1" WaveManager
+WaveManager "1" o-- "*" Enemy
+Tower "1" o-- "*" Projectile
+Projectile "1" o-- "1" Enemy
 
-Level "1" o-- "1..*" Enemy
-Level "1" o-- "1..*" Tower
-Level "1" o-- "1" Path
-Level "1" o-- "1" WaveManager
-
-EnemyFactory ..> Enemy : creates >
-TowerFactory ..> Tower : creates >
-
+Tower <|-- FireFlowerTower
+Tower <|-- IceTower
 Enemy <|-- GoombaEnemy
 Enemy <|-- KoopaEnemy
-Tower <|-- FireFlowerTower
-Tower <|-- KoopaShellTower
-Tower <|-- PSwitchTower
+Enemy <|-- ParagoombaEnemy
+Enemy <|-- BowserEnemy
+Projectile <|-- FireballProjectile
+Projectile <|-- IceProjectile
 
-EventDispatcher o-- IObserver
-
-GameView o-- GameModel
-LevelView o-- Level
-EnemyView o-- Enemy
-TowerView o-- Tower
-ProjectileView o-- Projectile
-MenuView o-- GameModel
-HUDView o-- GameModel
-
-GameController o-- GameModel
-LevelController o-- Level
-EnemyController o-- Enemy
-TowerController o-- Tower
-InputController o-- GameController
+GameView o-- LevelView
+GameView o-- TowerView
+GameView o-- EnemyView
+GameView o-- HUDView
+MainMenuView o-- GameManager
+VictoryView o-- GameManager
+GameOverView o-- GameManager
+TowerPlacementController o-- LevelManager
+TowerPlacementController o-- Player
 
 @enduml 
